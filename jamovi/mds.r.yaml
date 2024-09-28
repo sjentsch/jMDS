@@ -1,0 +1,97 @@
+---
+name:  mdsSym
+title: Multidimensional Scaling
+jrs:   '1.1'
+
+items:
+  - name: genInf
+    type: Html
+    clearWith: []
+    content: ""
+
+  - name: tblCfg
+    type: Table
+    title: 'Configuration Table'
+    description: a table containing the fitted configurations
+    refs:  [ smacof_2009, smacof_2022, jMDS ]
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    rows: 0
+    columns:
+      - name: nmeObj
+        title: 'Objects'
+        type: text
+
+  - name: figCfg
+    type: Image
+    title: 'Configuration Plot'
+    description: a diagram showing the fitted configurations
+    width: 450
+    height: 400
+    renderFun: .pltCfg
+    visible: (figCfg)
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+
+  - name: figShp
+    type: Image
+    title: 'Shepard Diagram'
+    description: TBA
+    width: 450
+    height: 400
+    renderFun: .pltShp
+    visible: (figShp)
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+
+  - name: figStr
+    type: Image
+    title: 'Stress Diagram'
+    description: TBA
+    width: 450
+    height: 400
+    renderFun: .pltStr
+    visible: (figStr)
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+
+  - name: figRes
+    type: Image
+    title: 'Residual Diagram'
+    description: TBA
+    width: 450
+    height: 400
+    renderFun: .pltRes
+    visible: (figRes)
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+
+  - name: figHst
+    type: Image
+    title: 'Histogram of the Dissimilarities'
+    description: TBA
+    width: 450
+    height: 400
+    renderFun: .pltHst
+    visible: (figHst)
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+
+  - name: figWgh
+    type: Image
+    title: 'Weights Diagram'
+    description: TBA
+    width: 450
+    height: 400
+    renderFun: .pltWgh
+    visible: (figWgh)
+    clearWith: [ mdeMDS, varInd, xfmInd, lvlInd, dimInd ]
+
+  - name: addInf
+    type: Html
+    clearWith: []
+    content: ""
+
+  - name: ov_Cfg
+    title: Configurations
+    type: Output
+    varTitle: Configuration
+    varDescription: Configuration from MDS
+    measureType: continuous
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd ]
+
+...
