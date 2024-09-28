@@ -1,0 +1,378 @@
+---
+name:  mds
+title: Multidimensional Scaling
+menuGroup: jMDS
+version: '1.0.0'
+jas: '1.2'
+
+description:
+  main: Perform Multidimensional Scaling
+  R:
+    dontrun: true
+    usage: |
+      # TRIAL
+      # TRIAL
+      # TRIAL
+
+completeWhenFilled: true
+
+options:
+  - name: data
+    type: Data
+    description:
+      R: the data as a data frame
+
+  - name:  mdeMDS
+    title: "Mode"
+    type:  List
+    options:
+    - name: Sym
+      title: Symmetric
+    - name: Raw
+      title: Raw Data
+    - name: Ind
+      title: Individual Diff.
+    default: Sym
+
+# =============================================================================
+
+  - name: varSym
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: a vector of strings naming the variables of interest in `data`
+
+  - name: nmeSym
+    type: Variable
+    suggested:
+      - nominal
+    permitted:
+      - factor
+    rejectInf: false
+    description:
+      R: > 
+        a string with a variable name pointing to a column containing the
+        variable names if `data` is a sparse matrix
+
+  - name: lvlSym
+    type: List
+    options:
+      - title: Metric
+        name:  interval
+      - title: Ordinal
+        name:  ordinal
+    default: ordinal
+    description:
+      R: >
+        `'ordinal'` (default) or `'metric'`, the measurement level of the
+        variables of interest
+
+  - name: dimSym
+    type: Integer
+    min: 2
+    max: 10
+    default: 2
+    description:
+      R: >
+        an integer (default: 2), number of MDS dimensions
+
+  - name: xfmSym
+    type: List
+    options:
+      - title: Already Distances (no conversion)
+        name:  none
+      - title: Transform Correlations
+        name:  corr
+      - title: Subtract from Maximum Value
+        name:  reverse
+      - title: Calculate Reciprocal
+        name:  reciprocal
+      - title: Assign Ranks
+        name:  ranks
+      - title: Exponential
+        name:  exp
+      - title: Gaussian
+        name:  Gaussian
+      - title: Co-occurrences
+        name:  cooccurrence
+      - title: Gravity
+        name:  gravity
+      - title: Confusion Proportions
+        name:  confusion
+      - title: Transition frequencies
+        name:  transition
+      - title: Membership
+        name:  membership
+      - title: Probabilities
+        name:  probability
+      - title: Subtract from integer value
+        name:  integer
+    default: none
+    description:
+      R: >
+        `'none'` (default), `'corr'`, `'reverse'`, `'reciprocal'`, `'ranks'`,
+        `'exp'`, `'Gaussian'`, `'cooccurrence'`, `'gravity'`, `'confusion'`,
+        `'transition'`, `'membership'`, `'probability'`, or an integer value
+        if `'none'`, the input data are already dissimilarities / distances;
+        otherwise, which method to use for converting the original (similarity)
+        matrix into a dissimiliarity / distance matrix that is then submitted to
+        the MDS calculation
+
+  - name: xfiSym
+    type: Integer
+    default: 0
+    description:
+      R: >
+        an integer (default: 0) from which the original values are subtracted
+
+# =============================================================================
+
+  - name: varRaw
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: a vector of strings naming the variables of interest in `data`
+
+  - name: nmeRaw
+    type: Variable
+    suggested:
+      - nominal
+    permitted:
+      - factor
+    rejectInf: false
+    description:
+      R: > 
+        a string with a variable containg the names for the data in the rows
+        (e.g., a participant ID)
+
+  - name: lvlRaw
+    type: List
+    options:
+      - title: Metric
+        name:  interval
+      - title: Ordinal
+        name:  ordinal
+    default: ordinal
+    description:
+      R: >
+        `'ordinal'` (default) or `'metric'`, the measurement level of the
+        variables of interest
+
+  - name: dimRaw
+    type: Integer
+    min: 2
+    max: 10
+    default: 2
+    description:
+      R: >
+        an integer (default: 2), number of MDS dimensions
+
+  - name: dirRaw
+    type: List
+    options:
+      - title: Columns
+        name:  col
+      - title: Rows
+        name:  row
+    default: col
+    description:
+      R: >
+        `'col'` (default) or `'row'`, are the distances analyzed between
+        columns or rows
+
+  - name: xfmRaw
+    type: List
+    options:
+      - title: Already Distances (no conversion)
+        name:  none
+      - title: Reverse (for preferences or ratings)
+        name:  reverse
+      - title: Rank (for preferences or ratings)
+        name:  rank
+      - title: Correlation (Pearson) to Distance
+        name:  pearson
+      - title: Correlation (Kendall) to Distance
+        name:  kendall
+      - title: Correlation (Spearman) to Distance
+        name:  spearman
+      - title: Euclidean Distance
+        name: minkowski_2
+      - title: Euclidean Distance (z-std.)
+        name: z_minkowski_2
+      - title: Manhattan Distance
+        name: minkowski_1
+      - title: Manhattan Distance (z-std. data)
+        name: z_minkowski_1
+      - title: Minkowski Distance (power = 3)
+        name: minkowski_3
+      - title: Minkowski Distance (power = 3, z-std.)
+        name: z_minkowski_3
+      - title: Minkowski Distance (power = 4)
+        name: minkowski_4
+      - title: Minkowski Distance (power = 4, z-std.)
+        name: z_minkowski_4
+      - title: Jaccard Distance
+        name: binary
+      - title: Jaccard Distance (z-std. Data)
+        name: z_binary
+    default: none
+    description:
+      R: >
+        TBA
+
+# =============================================================================
+
+  - name: varInd
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: a vector of strings naming the variables of interest in `data`
+
+  - name: nmeInd
+    type: Variable
+    suggested:
+      - nominal
+    permitted:
+      - factor
+      - numeric
+    rejectInf: false
+    description:
+      R: >
+        a string with a variable name pointing to a column containing the
+        variable names if `data` is composed of sparse matrices
+
+  - name: lvlInd
+    type: List
+    options:
+      - title: Metric
+        name:  interval
+      - title: Ordinal
+        name:  ordinal
+    default: ordinal
+    description:
+      R: >
+        `'ordinal'` (default) or `'metric'`, the measurement level of the
+        variables of interest
+
+  - name: dimInd
+    type: Integer
+    min: 2
+    max: 10
+    default: 2
+    description:
+      R: >
+        an integer (default: 2), number of MDS dimensions
+
+  - name: xfmInd
+    type: List
+    options:
+      - title: Already Distances (no conversion)
+        name:  none
+      - title: Transform Correlations
+        name:  corr
+      - title: Subtract from Maximum Value
+        name:  reverse
+      - title: Calculate Reciprocal
+        name:  reciprocal
+      - title: Assign Ranks
+        name:  ranks
+      - title: Exponential
+        name:  exp
+      - title: Gaussian
+        name:  Gaussian
+      - title: Co-occurrences
+        name:  cooccurrence
+      - title: Gravity
+        name:  gravity
+      - title: Confusion Proportions
+        name:  confusion
+      - title: Transition frequencies
+        name:  transition
+      - title: Membership
+        name:  membership
+      - title: Probabilities
+        name:  probability
+      - title: Subtract from integer value
+        name:  integer
+    default: none
+    description:
+      R: >
+        `'none'` (default), `'corr'`, `'reverse'`, `'reciprocal'`, `'ranks'`,
+        `'exp'`, `'Gaussian'`, `'cooccurrence'`, `'gravity'`, `'confusion'`,
+        `'transition'`, `'membership'`, `'probability'`, or an integer value
+        if `'none'`, the input data are already dissimilarities / distances;
+        otherwise, which method to use for converting the original (similarity)
+        matrix into a dissimiliarity / distance matrix that is then submitted to
+        the MDS calculation
+
+  - name: xfiInd
+    type: Integer
+    default: 0
+    description:
+      R: >
+        an integer (default: 0) from which the original values are subtracted
+
+# =============================================================================
+
+  - name: clmSPP
+    type: Bool
+    default: false
+
+  - name: figCfg
+    type: Bool
+    default: true
+
+  - name: cfgBbl
+    type: Bool
+    default: false
+
+  - name: cfgInX
+    type: Bool
+    default: false
+
+  - name: cfgInY
+    type: Bool
+    default: false
+
+  - name: figShp
+    type: Bool
+    default: false
+
+  - name: figStr
+    type: Bool
+    default: false
+
+  - name: figRes
+    type: Bool
+    default: false
+
+  - name: figHst
+    type: Bool
+    default: false
+
+  - name: figWgh
+    type: Bool
+    default: false
+
+  - name: ov_Cfg
+    type: Output
+
+...
