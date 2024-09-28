@@ -1,0 +1,14 @@
+^CRAN-RELEASE$
+^figure$
+cran-comments.md
+
+^.*\.Rproj$
+^.*\.jmo$
+
+^temp$
+^build$
+^jamovi$
+^README.md$
+^\.Rproj\.user$
+^\..*$
+^.*\.tar.gz
