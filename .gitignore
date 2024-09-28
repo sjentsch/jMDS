@@ -4,7 +4,6 @@
 
 # Session Data files
 .RData
-.RDataTmp
 
 # User-specific files
 .Ruserdata
@@ -39,11 +38,25 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# pkgdown site
+# renv library
+renv/library/
+renv/staging/
+
+# jamovi options js
+jamovi/ui/*.options.js
+
+# packaged module
+*.jmo
+
+# build folders
+build/
+build*/
+
+# other files / folders
 docs/
-
-# translation temp files
-po/*~
-
-# RStudio Connect folder
-rsconnect/
+temp/
+man/
+.DS_Store
+npm-debug.log
+inst/doc
+tests/testthat/Rplots.pdf
