@@ -1,0 +1,65 @@
+---
+title: Multidimensional Scaling (MDS) for jamovi
+name: jMDS
+version: 0.0.1
+jms: '1.0'
+authors:
+  - Sebastian Jentschke
+  - Hans-Rüdiger Pfister
+maintainer: Sebastian Jentschke <sebastian.jentschke@uib.no>
+date: '2024-09-17'
+type: R
+description: >-
+  More about what it does (maybe more than one line) Use four spaces when
+  indenting paragraphs within the Description.
+analyses:
+  - title: Multidimensional Scaling
+    name: mds
+    ns: jMDS
+    menuGroup: jMDS
+    menuTitle: Multidimensional Scaling
+    description: Perform Multidimensional Scaling
+datasets:
+  - name: Cars_SymAll
+    path: Cars4MDS_FULL.omv
+    description: Format Example (Symmetric)
+  - name: Cars_SymAll
+    path: Cars4MDS_TRILF.omv
+    description: Format Example (Lower Triang, Full)
+  - name: Cars_SymAll
+    path: Cars4MDS_TRILS.omv
+    description: Format Example (Lower Triang, Sparse)
+  - name: Cars_SymAll
+    path: Cars4MDS_TRIUF.omv
+    description: Format Example (Upper Triang, Full)
+  - name: Cars_SymAll
+    path: Cars4MDS_TRIUS.omv
+    description: Format Example (Upper Triang, Sparse)
+  - name: Breakfast
+    path: breakfast.omv
+    description: Rank Several Breakfast Items (Raw Data)
+  - name: Country Demographics
+    path: Demography_2022.omv
+    description: Several Country Demographics (e.g, GDP)
+  - name: European Distances
+    path: Eurodist.omv
+    description: Distances Between Some European Cities
+  - name: Margarine (Symm. Matrix)
+    path: Margarine_FULL.omv
+    description: Margarine (for Ind. Diff, Symm. Matrix)
+  - name: Margarine (Triang. + Diag.)
+    path: Margarine_TRILD.omv
+    description: Margarine (for Ind. Diff, Triang. + Diag.)
+  - name: Margarine (Triang.)
+    path: Margarine_TRILF.omv
+    description: Margarine (for Ind. Diff, Triang.)
+  - name: Margarine (Sparse)
+    path: Margarine_TRILS.omv
+    description: Margarine (for Ind. Diff, Sparse)
+  - name: Wenchuan Eathquake
+    path: Wenchuan.omv
+    description: Psychol. Conseq. of the Wenchuan Earthquake
+usesNative: true
+minApp: 2.5.0
+
+...
