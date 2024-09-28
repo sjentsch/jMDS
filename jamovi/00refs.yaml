@@ -1,0 +1,33 @@
+---
+refs:
+    smacof_2009:
+        type: 'article'
+        author: de Leeuw, J., & Mair, P.
+        year: 2009
+        title: 'Multidimensional Scaling Using Majorization: SMACOF in R'
+        publisher: Journal of Statistical Software
+        volume: 31
+        issue: 3
+        pages: 1-30
+        doi: 10.18637/jss.v031.i03
+
+    smacof_2022:
+        type: 'article'
+        author: Mair, P., Groenen, P., & de Leeuw, J.
+        year: 2022
+        title: 'Multidimensional Scaling Using Majorization: SMACOF in R'
+        publisher: Journal of Statistical Software
+        volume: 102
+        issue: 10
+        pages: 1-47
+        doi: 10.18637/jss.v102.i10
+
+    jMDS:
+        type: 'software'
+        author: Jentschke, S., Pfister, H.-R.
+        year: 2024
+        title: 'jMDS: Multidimensional Scaling (MDS) for jamovi'
+        publisher: '[jamovi module]. Available at https://github.com/sjentsch/jMDS'
+        url: https://github.com/sjentsch/jMDS
+
+...
