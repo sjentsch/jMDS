@@ -1,67 +1,94 @@
 mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "mdsClass",
     inherit = mdsBase,
+    #### Active bindings ----
+    active = list(
+        getDta = function() {
+            if (is.null(private$.crrDta))
+                private$.crrDta <- private$.clnDta()
+
+            return(private$.crrDta)
+        },
+        getMDS = function() {
+            if (is.null(private$.crrMDS))
+                private$.crrMDS <- private$.clcMDS()
+
+            return(private$.crrMDS)
+        }
+    ),
     private = list(
+        #### Member variables ----
         .crrDta = NULL,
         .crrMDS = NULL,
 
+        #### Init + run functions ----
         .init = function() {
-            private$.crrDta <- NULL
-            private$.crrMDS <- NULL
-
-            if (is.null(self$options[[paste0("var", self$options$mdeMDS)]])) return(invisible(NULL))
-
             # initialize table and help / information
-            # [1] symmetric input data (e.g., distances, correlations, etc.)
-            if        (self$options$mdeMDS == "Sym") {
-                private$.prpCfg(crrDim = self$options$dimSym, numRow = length(c(self$options$varSym, self$options$nmeSym)))
-            # [2] input data as “usual” data matrix (i.e., vars in columns, units / subjects in rows)
-            } else if (self$options$mdeMDS == "Raw") {
-                crrRow <- ifelse(self$options$dirRaw == "col", length(self$options$varRaw), nrow(self$readDataset()))
-                private$.prpCfg(crrDim = self$options$dimRaw, numRow = crrRow)
-            # [3] input data for determining individual differences (i.e., a series
-            #     of symmetric matrices, number of vars * number of individuals)
-            } else if (self$options$mdeMDS == "Ind") {
-                private$.prpCfg(crrDim = self$options$dimInd, numRow = length(c(self$options$varInd, self$options$nmeInd)))
-            }
+            private$.prpCfg()
+            private$.genInf()
+            private$.addInf()
         },
         .run = function() {
-            crrMDS <- NULL
+            if (!is.null(self$getMDS)) {
+                private$.fllCfg()
+                for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(self$getMDS)
+            }
+            private$.genInf()
+        },
+        # check (and if necessary convert) input data
+        .clnDta = function() {
+            crrMde <- self$options$mdeMDS
+            mdsVar <- self$options[[paste0("var", crrMde)]]
+            if (length(mdsVar) < self$options[[paste0("dim", crrMde)]] || nrow(self$data) < 1) return(NULL)
+            # ensure that the variables have the correct order (as in the dataset; variables might have been
+            # added to varSym / varInd in another order and then, the dataset may not be symmetric anymore)
+            if (crrMde %in% c("Sym", "Ind")) mdsVar <- intersect(names(self$data), mdsVar)
+
+            crrDta <- list()
+            # the name variable is converted to character
+            crrVar <- self$options[[paste0("nme", crrMde)]]
+            if (length(crrVar) > 0) crrDta[[crrVar]] <- as.character(self$data[[crrVar]])
+            # the variables to be used in the MDS are converted to numeric
+            for (crrVar in mdsVar)
+                crrDta[[crrVar]] <- jmvcore::toNumeric(self$data[[crrVar]])
+            attr(crrDta, 'row.names') <- seq_along(crrDta[[1]])
+            attr(crrDta, 'class') <- 'data.frame'
+
+            return(crrDta)
+        },
+        # check (and if necessary - i.e., if variables, mode, etc. hav changed - regenerate) MDS estimate
+        .clcMDS = function() {
+            crrDta <- self$getDta
+            if (is.null(crrDta)) return(NULL)
+            
             # [1] symmetric input data (e.g., distances, correlations, etc.)
-            if        (self$options$mdeMDS == "Sym") {
-                if ((length(c(self$options$varSym, self$options$nmeSym)) >= self$options$dimSym + 1) &&
-                    (nrow(self$data) == length(self$options$varSym))) {
-                    crrMDS <- mdsSym(crrDta = self$data,           varSym = self$options$varSym, nmeSym = self$options$nmeSym,
-                                     xfmSym = self$options$xfmSym, dimSym = self$options$dimSym, lvlSym = self$options$lvlSym)
-                }
+            if        (self$options$mdeMDS == "Sym" &&
+                       (length(c(self$options$varSym, self$options$nmeSym)) >= self$options$dimSym + 1) &&
+                       (nrow(crrDta) == length(self$options$varSym))) {
+                return(mdsSym(crrDta = crrDta, varSym = self$options$varSym, nmeSym = self$options$nmeSym,
+                              xfmSym = self$options$xfmSym, dimSym = self$options$dimSym, lvlSym = self$options$lvlSym))
             # [2] input data as “usual” data matrix (i.e., vars in columns, units / subjects in rows)
-            } else if (self$options$mdeMDS == "Raw") {
-                if ((self$options$dirRaw == "col" && length(self$options$varRaw) >= self$options$dimRaw + 1) ||
-                    (self$options$dirRaw == "row" && nrow(self$data)             >= self$options$dimRaw + 1)) {
-                    crrMDS <- mdsRaw(crrDta = self$data,           varRaw = self$options$varRaw, nmeRaw = self$options$nmeRaw,
-                                     xfmRaw = self$options$xfmRaw, dirRaw = self$options$dirRaw, dimRaw = self$options$dimRaw,
-                                     lvlRaw = self$options$lvlRaw)
-                }
+            } else if (self$options$mdeMDS == "Raw" &&
+                       (self$options$dirRaw == "col" && length(self$options$varRaw) >= self$options$dimRaw + 1) ||
+                       (self$options$dirRaw == "row" && nrow(crrDta)                >= self$options$dimRaw + 1)) {
+                return(mdsRaw(crrDta = crrDta, varRaw = self$options$varRaw, nmeRaw = self$options$nmeRaw, xfmRaw = self$options$xfmRaw,
+                              dirRaw = self$options$dirRaw, dimRaw = self$options$dimRaw, lvlRaw = self$options$lvlRaw))
             # [3] input data for determining individual differences (i.e., a series
             #     of symmetric matrices, number of vars * number of individuals)
-            } else if (self$options$mdeMDS == "Ind") {
-                if ((length(c(self$options$varInd, self$options$nmeInd)) >= self$options$dimInd + 1) &&
-                    (nrow(self$data) %% length(self$options$varInd) == 0)) {
-                    crrMDS <- mdsInd(crrDta = self$data,           varInd = self$options$varInd, nmeInd = self$options$nmeInd,
-                                     xfmInd = self$options$xfmInd, dimInd = self$options$dimInd, lvlInd = self$options$lvlInd)
-                }
+            } else if (self$options$mdeMDS == "Ind" &&
+                       (length(c(self$options$varInd, self$options$nmeInd)) >= self$options$dimInd + 1) &&
+                       (nrow(crrDta) %% length(self$options$varInd) == 0)) {
+                return(mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd,
+                              xfmInd = self$options$xfmInd, dimInd = self$options$dimInd, lvlInd = self$options$lvlInd))
+            } else {
+                return(NULL)
             }
-
-            if (!is.null(crrMDS)) {
-                private$.fllCfg(crrMDS)
-                for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(crrMDS)
-            }
-            private$.genInf(crrMDS)
         },
         # handling general and additional information messages
-        .genInf = function(crrMDS = NULL) {
+        .genInf = function() {
             crrInf <- self$results$genInf
             crrMde <- self$options$mdeMDS
+            crrMDS <- self$getMDS
             if (!is.null(crrMDS)) {
                 outInf <- c(sprintf(paste0("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
                                            "<p>Stress-1 value: <strong>%.4f</strong></p>"),
@@ -80,16 +107,28 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              crrInf$setContent(paste0("<p>", paste0(c(addMDS, getVar(paste0("add", crrMde))), collapse = "</p><p>"), "</p>"))
         },
         # prepare and fill configuration table
-        .prpCfg = function(crrDim = 2, numRow = 0) {
-            if (numRow < 1) return(invisible(NULL))
+        .prpCfg = function() {
+            crrMde <- self$options$mdeMDS
+            crrDim <- self$options[[paste0("dim", crrMde)]]
+            # for both symmetric matrices and individual differences, the length of variables plus the name of an eventual name
+            # variable determines the number of rows (the name variable is only necessary for sparse matrices, where the number
+            # of variables is reduced by 1 - which is compensated for by adding the name variable - length 1)
+            # for raw data matrices is becomes slightly more complicated: 
+            crrRow <- ifelse(crrMde %in% c("Sym", "Ind"),
+                             length(c(self$options[[paste0("var", crrMde)]], self$options[[paste0("nme", crrMde)]])),
+                             ifelse(self$options$dirRaw == "col", length(self$options$varRaw), nrow(self$readDataset())))
+            if (crrRow < crrDim + 1) return(invisible(NULL))
+
             crrTbl <- self$results$tblCfg
-           
-            colNme <- c(sprintf("Dimension %d", seq(crrDim)), rep("SPP", self$options$clmSPP))
-            valRow <- stats::setNames(as.list(rep("", length(colNme))), colNme)
-            for (i in seq_along(colNme)) crrTbl$addColumn(name = gsub("Dimension ", "D", colNme[i]), title = colNme[i], type = 'number')
-            for (i in seq(1, numRow))   crrTbl$addRow(rowKey = i, values = valRow)
+            nmeClm <- c(sprintf("Dimension %d", seq(crrDim)), rep("SPP", self$options$clmSPP))
+            nllRow <- stats::setNames(as.list(rep("", length(nmeClm))), nmeClm)
+            for (i in seq_along(nmeClm)) crrTbl$addColumn(name = gsub("Dimension ", "D", nmeClm[i]), title = nmeClm[i], type = 'number')
+            for (i in seq(1, crrRow))    crrTbl$addRow(rowKey = i, values = nllRow)
         },
-        .fllCfg = function(crrMDS = NULL) {
+        .fllCfg = function() {
+            crrMDS <- self$getMDS
+            if (is.null(crrMDS)) return(invisible(NULL))
+
             crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
             crrDta <- cbind(data.frame(nmeObj = row.names(crrMDS[[crrCfg]])),
                             as.data.frame(crrMDS[[crrCfg]]),
@@ -105,7 +144,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # cf. plot(euro.mds, type = "bubbleplot", main = NULL)
         .pltCfg = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
 
             crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
             crrDta <- cbind(as.data.frame(crrMDS[[crrCfg]]), data.frame(pntSze = bblPnt(crrMDS[[nmeSPP(crrCfg)]], self$options$cfgBbl)))
@@ -125,7 +164,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # creates a weighted histogram of the dissimilarities, cf. plot(euro.mds, plot.type = "histogram", main = NULL)
         .pltHst = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
+
             if (is(crrMDS, "smacofR")) {
                 print(pltErr(sprintf("Histogram can not be produced\nfor %s.", crrMDS$model)))
                 return(TRUE)
@@ -149,7 +189,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # creates a residual plot, cf. plot(euro.mds, plot.type = "resplot", main = NULL)
         .pltRes = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
+            
             if (is(crrMDS, "smacofR")) {
                 print(pltErr(sprintf("Residual plot can not be produced\nfor %s.", crrMDS$model)))
                 return(TRUE)
@@ -176,7 +217,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # create Shepard diagram, cf. plot(euro.mds, plot.type = "Shepard", main = NULL)
         .pltShp = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
             
             if        (is(crrMDS, "smacofB")) {
                 crrDta <- data.frame(x = as.numeric(crrMDS$delta),   y = as.numeric(crrMDS$confdist), yf = as.numeric(crrMDS$dhat))
@@ -200,7 +241,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # create Stress diagram, cf. plot(euro.mds, plot.type="stressplot", main = NULL)
         .pltStr = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
             
             crrSPP <- crrMDS[[nmeSPP(nmeCfg(crrMDS, self$options$dirRaw))]]
             crrDta <- data.frame(x = seq_along(crrSPP), y = sort(crrSPP, decreasing = TRUE))
@@ -217,7 +258,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         .pltWgh = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
-            if (is.null(crrMDS)) return(NULL)
+            if (is.null(crrMDS)) return(FALSE)
+
             if (is(crrMDS, "smacofB") || is(crrMDS, "smacofR")) {
                 print(pltErr(sprintf("A weights diagram can not be produced\nfor %s.", crrMDS$model)))
                 return(TRUE)
