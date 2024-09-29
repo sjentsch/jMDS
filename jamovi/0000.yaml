@@ -54,7 +54,7 @@ datasets:
     path: Margarine_TRILF.omv
     description: Margarine (for Ind. Diff, Triang.)
   - name: Margarine (Sparse)
-    path: Margarine_TRILS.omv
+    path: Margarine_SPRS.omv
     description: Margarine (for Ind. Diff, Sparse)
   - name: Wenchuan Eathquake
     path: Wenchuan.omv
