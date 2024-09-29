@@ -14,7 +14,7 @@ items:
     title: 'Configuration Table'
     description: a table containing the fitted configurations
     refs:  [ smacof_2009, smacof_2022, jMDS ]
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw, clmSPP ]
     rows: 0
     columns:
       - name: nmeObj
@@ -29,7 +29,7 @@ items:
     height: 400
     renderFun: .pltCfg
     visible: (figCfg)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw, cfgBbl, cfgInX, cfgInY ]
 
   - name: figShp
     type: Image

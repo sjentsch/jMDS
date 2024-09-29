@@ -401,7 +401,8 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dimSym",
                     "dimRaw",
                     "dimInd",
-                    "dirRaw"),
+                    "dirRaw",
+                    "clmSPP"),
                 rows=0,
                 columns=list(
                     list(
@@ -430,7 +431,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dimSym",
                     "dimRaw",
                     "dimInd",
-                    "dirRaw")))
+                    "dirRaw",
+                    "cfgBbl",
+                    "cfgInX",
+                    "cfgInY")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figShp",
