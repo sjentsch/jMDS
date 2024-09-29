@@ -116,6 +116,7 @@ lstSbj <- function(numSbj = 1) {
 }
 
 mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
+    crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()))
     lngInd <- length(varInd)
     # check whether the length of the data frame is a multiple of varInd
     if (nrow(crrDta) %% lngInd != 0) {
@@ -125,30 +126,45 @@ mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", d
         return(invisible(NULL))
     }
 
+    # ensure that the variables in varInd appear in the same order as in the data set
+    varInd <- intersect(names(crrDta), varInd)
     numSbj <- nrow(crrDta) / lngInd
     crrLst <- vector(mode = "list", length = numSbj)
     for (crrSbj in seq(numSbj)) {
         crrLst[[crrSbj]] <- dstSym(crrDta[crrSbj * lngInd - seq(lngInd - 1, 0), ], varInd, nmeInd, xfmInd)
     }
 
-    smacof::smacofIndDiff(crrLst, ndim = dimInd, type = lvlInd)
+    crrMDS <- smacof::smacofIndDiff(crrLst, ndim = dimInd, type = lvlInd)
+    attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
+
+    crrMDS
 }
 
 mdsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none", dirRaw = "col", dimRaw = 2, lvlRaw = "ordinal") {
+    crrArg <- c(list(mdeMDS = "Raw"), as.list(environment()))
     # (a) either use the data as they are ("none"), or revert or rank them before using them with smacofRect
     if        (xfmRaw %in% c("none", "reverse", "rank")) {
-        smacof::smacofRect(dstR4R(crrDta, varRaw, nmeRaw, xfmRaw),        ndim = dimRaw, type = lvlRaw)
+        crrMDS <- smacof::smacofRect(dstR4R(crrDta, varRaw, nmeRaw, xfmRaw),        ndim = dimRaw, type = lvlRaw)
     # (b) calculate correlations (converted to distances) or distance measures (e.g., euclidean) before using them with smacofSym 
     } else if (xfmRaw %in% c("pearson", "kendall", "spearman", paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2)))) {
-        smacof::smacofSym(dstR4S(crrDta, varRaw, nmeRaw, xfmRaw, dirRaw), ndim = dimRaw, type = lvlRaw)
+        crrMDS <- smacof::smacofSym(dstR4S(crrDta, varRaw, nmeRaw, xfmRaw, dirRaw), ndim = dimRaw, type = lvlRaw)
     } else {
         jmvcore::reject(sprintf("xfmRaw needs to be one of the following methods: \"%s\"", paste(c("none", "reverse", "rank", "pearson",
           "kendall", "spearman", paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2))), collapse = "\", \"")))
     }
+    attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
+    
+    crrMDS
 }
 
 mdsSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none", dimSym = 2, lvlSym = "ordinal") {
-    smacof::smacofSym(dstSym(crrDta, varSym, nmeSym, xfmSym), ndim = dimSym, type = lvlSym)
+    crrArg <- c(list(mdeMDS = "Sym"), as.list(environment()))
+    # ensure that the variables in varSym appear in the same order as in the data set
+    varSym <- intersect(names(crrDta), varSym)
+    crrMDS <- smacof::smacofSym(dstSym(crrDta, varSym, nmeSym, xfmSym), ndim = dimSym, type = lvlSym)
+    attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
+    
+    crrMDS   
 }
 
 nmeCfg <- function(crrMDS = NULL, dirRaw = "col") {
