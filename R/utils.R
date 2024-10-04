@@ -10,6 +10,14 @@ chkDgn <- function(crrDta = NULL, xfmSym = "none") {
     !(xfmSym %in% c("none", "corr"))
 }
 
+chkMDS <- function(crrMDS = NULL, crrOpt = NULL, crrDta = NULL) {
+    crrArg <- attr(crrMDS, "crrArg")
+    eqlMDS <- crrArg[["crrHsh"]] == digest::digest(crrDta)
+    for (N in setdiff(names(crrArg), "crrHsh")) eqlMDS <- eqlMDS && identical(crrArg[[N]], crrOpt[[N]])
+    
+    eqlMDS
+}
+
 cnvTrF <- function(crrDta = NULL, xfmSym = "none") {
     if        (all(is.na(crrDta[upper.tri(crrDta)]))) {
         crrDta[upper.tri(crrDta)] <- t(crrDta)[upper.tri(crrDta)]
@@ -41,6 +49,15 @@ cnvTrS <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
     row.names(crrDta) <- names(crrDta)
     
     crrDta
+}
+
+crtInf <- function(crrMDS = NULL, crrMde = "Sym", crrLvl = "", crrDrR = "col") {
+    if (!is.null(crrMDS)) {
+        sprintf("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p><p>Stress-1 value: <strong>%.4f</strong></p>",
+                crrMDS$model, crrLvl, ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj), crrMDS$niter, crrMDS$stress)
+    } else {
+        paste0("<p>", paste0(c(genMDS, getVar(paste0("gen", crrMde))), collapse = "</p><p>"), "</p>")
+    }
 }
 
 # calculate distance measures for raw data to be used with smacofSym
@@ -116,7 +133,7 @@ lstSbj <- function(numSbj = 1) {
 }
 
 mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
-    crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()))
+    crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
     lngInd <- length(varInd)
     # check whether the length of the data frame is a multiple of varInd
     if (nrow(crrDta) %% lngInd != 0) {
@@ -141,7 +158,7 @@ mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", d
 }
 
 mdsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none", dirRaw = "col", dimRaw = 2, lvlRaw = "ordinal") {
-    crrArg <- c(list(mdeMDS = "Raw"), as.list(environment()))
+    crrArg <- c(list(mdeMDS = "Raw"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
     # (a) either use the data as they are ("none"), or revert or rank them before using them with smacofRect
     if        (xfmRaw %in% c("none", "reverse", "rank")) {
         crrMDS <- smacof::smacofRect(dstR4R(crrDta, varRaw, nmeRaw, xfmRaw),        ndim = dimRaw, type = lvlRaw)
@@ -158,7 +175,7 @@ mdsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none", d
 }
 
 mdsSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none", dimSym = 2, lvlSym = "ordinal") {
-    crrArg <- c(list(mdeMDS = "Sym"), as.list(environment()))
+    crrArg <- c(list(mdeMDS = "Sym"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
     # ensure that the variables in varSym appear in the same order as in the data set
     varSym <- intersect(names(crrDta), varSym)
     crrMDS <- smacof::smacofSym(dstSym(crrDta, varSym, nmeSym, xfmSym), ndim = dimSym, type = lvlSym)
@@ -207,4 +224,9 @@ xpsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), dirRaw = "col", sc
         jmvcore::reject("dirRaw must be either \"col\" or \"row\".")
         invisible(NULL)
     }
+}
+
+xfmSnI <- function(crrOpt = NULL) {
+    crrMde <- crrOpt$mdeMDS
+    ifelse(crrOpt[[paste0("xfm", crrMde)]] == "integer", crrOpt[[paste0("xfi", crrMde)]], crrOpt[[paste0("xfm", crrMde)]])
 }

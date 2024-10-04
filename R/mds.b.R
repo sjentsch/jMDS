@@ -11,7 +11,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         getMDS = function() {
             if (is.null(private$.crrMDS))
-                private$.crrMDS <- private$.clcMDS()
+                private$.crrMDS <- private$.getMDS()
 
             return(private$.crrMDS)
         }
@@ -29,9 +29,10 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             private$.addInf()
         },
         .run = function() {
-            if (!is.null(self$getMDS)) {
+            crrMDS <- self$getMDS
+            if (!is.null(crrMDS)) {
                 private$.fllCfg()
-                for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(self$getMDS)
+                for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(crrMDS)
             }
             private$.genInf()
         },
@@ -57,49 +58,50 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             return(crrDta)
         },
         # check (and if necessary - i.e., if variables, mode, etc. hav changed - regenerate) MDS estimate
-        .clcMDS = function() {
+        .getMDS = function() {
             crrDta <- self$getDta
             if (is.null(crrDta)) return(NULL)
+
+            # try to load crrMDS from tempdir() and check it
+            crrFle <- file.path(tempdir(), "crrMDS")
+            if (file.exists(crrFle)) {
+                 crrMDS <- readRDS(crrFle)
+                 if (chkMDS(crrMDS, self$options, crrDta)) return(crrMDS)
+            }
             
             # [1] symmetric input data (e.g., distances, correlations, etc.)
             if        (self$options$mdeMDS == "Sym" &&
                        (length(c(self$options$varSym, self$options$nmeSym)) >= self$options$dimSym + 1) &&
                        (nrow(crrDta) == length(self$options$varSym))) {
-                return(mdsSym(crrDta = crrDta, varSym = self$options$varSym, nmeSym = self$options$nmeSym,
-                              xfmSym = self$options$xfmSym, dimSym = self$options$dimSym, lvlSym = self$options$lvlSym))
+                crrMDS <- mdsSym(crrDta = crrDta, varSym = self$options$varSym, nmeSym = self$options$nmeSym,
+                                 xfmSym = xfmSnI(self$options), dimSym = self$options$dimSym, lvlSym = self$options$lvlSym)
             # [2] input data as “usual” data matrix (i.e., vars in columns, units / subjects in rows)
             } else if (self$options$mdeMDS == "Raw" &&
                        (self$options$dirRaw == "col" && length(self$options$varRaw) >= self$options$dimRaw + 1) ||
                        (self$options$dirRaw == "row" && nrow(crrDta)                >= self$options$dimRaw + 1)) {
-                return(mdsRaw(crrDta = crrDta, varRaw = self$options$varRaw, nmeRaw = self$options$nmeRaw, xfmRaw = self$options$xfmRaw,
-                              dirRaw = self$options$dirRaw, dimRaw = self$options$dimRaw, lvlRaw = self$options$lvlRaw))
+                crrMDS <- mdsRaw(crrDta = crrDta, varRaw = self$options$varRaw, nmeRaw = self$options$nmeRaw, xfmRaw = self$options$xfmRaw,
+                                 dirRaw = self$options$dirRaw, dimRaw = self$options$dimRaw, lvlRaw = self$options$lvlRaw)
             # [3] input data for determining individual differences (i.e., a series
             #     of symmetric matrices, number of vars * number of individuals)
             } else if (self$options$mdeMDS == "Ind" &&
                        (length(c(self$options$varInd, self$options$nmeInd)) >= self$options$dimInd + 1) &&
                        (nrow(crrDta) %% length(self$options$varInd) == 0)) {
-                return(mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd,
-                              xfmInd = self$options$xfmInd, dimInd = self$options$dimInd, lvlInd = self$options$lvlInd))
+                crrMDS <- mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd,
+                                 xfmInd = xfmSnI(self$options), dimInd = self$options$dimInd, lvlInd = self$options$lvlInd)
             } else {
                 return(NULL)
             }
+
+            # store estimated solution in tempdir() and return crrMDS
+            saveRDS(crrMDS, crrFle)
+            
+            crrMDS
         },
         # handling general and additional information messages
         .genInf = function() {
-            crrInf <- self$results$genInf
             crrMde <- self$options$mdeMDS
-            crrMDS <- self$getMDS
-            if (!is.null(crrMDS)) {
-                outInf <- c(sprintf(paste0("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
-                                           "<p>Stress-1 value: <strong>%.4f</strong></p>"),
-                                    crrMDS$model, crrMDS$type, ifelse(is(crrMDS, "smacofR") && self$options$dirRaw == "row", crrMDS$nind, crrMDS$nobj),
-                                    crrMDS$niter, crrMDS$stress))
-            } else {
-                outInf <- c(genMDS, getVar(paste0("gen", crrMde)))
-            }
-            if (length(outInf) > 0 && all(nchar(outInf) > 0)) {
-                crrInf$setContent(paste0("<p>", paste0(outInf, collapse = "</p><p>"), "</p>"))
-            }
+            crrInf <- crtInf(self$getMDS, crrMde, self$options[[paste0("lvl", crrMde)]], self$options$dirRaw)
+            self$results$genInf$setContent(crrInf)
         },
         .addInf = function() {
              crrInf <- self$results$addInf
@@ -148,8 +150,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
             crrDta <- cbind(as.data.frame(crrMDS[[crrCfg]]), data.frame(pntSze = bblPnt(crrMDS[[nmeSPP(crrCfg)]], self$options$cfgBbl)))
-            crrRng <- c(rndMnM(min(vapply(crrDta[, c("D1", "D2")], min, numeric(1)))),
-                        rndMnM(max(vapply(crrDta[, c("D1", "D2")], max, numeric(1)))))
+            crrRng <- c(rndMnM(min(vapply(crrDta[, c("D1", "D2")], min, numeric(1))), 3),
+                        rndMnM(max(vapply(crrDta[, c("D1", "D2")], max, numeric(1))), 3))
             crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = D1, y = D2, label = rownames(crrDta))) +
                       ggplot2::geom_point(size = crrDta$pntSze, colour = theme$color[2]) +
                       ggplot2::geom_text(size = 4, vjust = -0.8) +
