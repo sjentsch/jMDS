@@ -69,6 +69,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                  if (chkMDS(crrMDS, self$options, crrDta)) return(crrMDS)
             }
             
+            # if we cannot use the stored / loaded solution (e.g., because settings have changed)
+            # we need to calculate it again
             # [1] symmetric input data (e.g., distances, correlations, etc.)
             if        (self$options$mdeMDS == "Sym" &&
                        (length(c(self$options$varSym, self$options$nmeSym)) >= self$options$dimSym + 1) &&

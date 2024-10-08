@@ -4,6 +4,8 @@ jus: '3.0'
 stage: 0
 compilerMode: tame
 
+# =============================================================================
+
 children:
   - type: ModeSelector
     name: mdeMDS
@@ -15,6 +17,9 @@ children:
       - type: Content
         name: Sym
         children:
+
+# -----------------------------------------------------------------------------
+
           - type: VariableSupplier
             persistentItems: false
             stretchFactor: 1
@@ -39,27 +44,38 @@ children:
             stretchFactor: 1
             children:
               - type: LayoutBox
-                margin: large
-                style: inline
+                style: list
                 stretchFactor: 1
                 children:
-                  - type: RadioButton
-                    name: lvlSym_ordinal
-                    optionName: lvlSym
-                    optionPart: ordinal
-                  - type: RadioButton
-                    name: lvlSym_interval
-                    optionName: lvlSym
-                    optionPart: interval
-              - type: LayoutBox
-                margin: large
-                stretchFactor: 1
-                children:
-                  - type: TextBox
-                    name: dimSym
-                    label: 'Number of MDS Dimensions:'
-                    format: number
+                  - type: LayoutBox
+                    style: inline
+                    stretchFactor: 1
+                    children:
+                      - type: RadioButton
+                        name: lvlSym_ordinal_primary
+                        optionName: lvlSym
+                        optionPart: ordinal_primary
+                      - type: RadioButton
+                        name: lvlSym_ordinal_secondary
+                        optionName: lvlSym
+                        optionPart: ordinal_secondary
+                      - type: RadioButton
+                        name: lvlSym_ordinal_tertiary
+                        optionName: lvlSym
+                        optionPart: ordinal_tertiary
+                      - type: RadioButton
+                        name: lvlSym_interval
+                        optionName: lvlSym
+                        optionPart: interval
+                  - type: LayoutBox
+                    style: inline
                     margin: large
+                    stretchFactor: 1
+                    children:
+                      - type: TextBox
+                        name: dimSym
+                        label: 'Number of MDS Dimensions:'
+                        format: number
 
           - type: CollapseBox
             label: Transform Similarities to Distances
@@ -90,6 +106,9 @@ children:
       - type: Content
         name: Raw
         children:
+
+# -----------------------------------------------------------------------------
+
           - type: VariableSupplier
             persistentItems: false
             stretchFactor: 1
@@ -115,8 +134,29 @@ children:
             stretchFactor: 1
             children:
               - type: LayoutBox
+                style: list
                 stretchFactor: 1
                 children:
+                  - type: LayoutBox
+                    style: inline
+                    stretchFactor: 1
+                    children:
+                      - type: RadioButton
+                        name: lvlRaw_ordinal_primary
+                        optionName: lvlRaw
+                        optionPart: ordinal_primary
+                      - type: RadioButton
+                        name: lvlRaw_ordinal_secondary
+                        optionName: lvlRaw
+                        optionPart: ordinal_secondary
+                      - type: RadioButton
+                        name: lvlRaw_ordinal_tertiary
+                        optionName: lvlRaw
+                        optionPart: ordinal_tertiary
+                      - type: RadioButton
+                        name: lvlRaw_interval
+                        optionName: lvlRaw
+                        optionPart: interval
                   - type: LayoutBox
                     style: inline
                     margin: large
@@ -124,30 +164,16 @@ children:
                     children:
                       - type: LayoutBox
                         style: inline
-                        stretchFactor: 1
-                        children:
-                          - type: RadioButton
-                            name: lvlRaw_ordinal
-                            optionName: lvlRaw
-                            optionPart: ordinal
-                          - type: RadioButton
-                            name: lvlRaw_interval
-                            optionName: lvlRaw
-                            optionPart: interval
-                      - type: LayoutBox
+                        margin: large
                         stretchFactor: 1
                         children:
                           - type: TextBox
                             name: dimRaw
                             label: 'Number of MDS Dimensions:'
                             format: number
-                  - type: LayoutBox
-                    style: inline
-                    margin: large
-                    stretchFactor: 1
-                    children:
                       - type: LayoutBox
                         style: inline
+                        margin: large
                         stretchFactor: 1
                         children:
                           - type: RadioButton
@@ -176,6 +202,9 @@ children:
       - type: Content
         name: Ind
         children:
+
+# -----------------------------------------------------------------------------
+
           - type: VariableSupplier
             persistentItems: false
             stretchFactor: 1
@@ -200,27 +229,38 @@ children:
             stretchFactor: 1
             children:
               - type: LayoutBox
-                margin: large
-                style: inline
+                style: list
                 stretchFactor: 1
                 children:
-                  - type: RadioButton
-                    name: lvlInd_ordinal
-                    optionName: lvlInd
-                    optionPart: ordinal
-                  - type: RadioButton
-                    name: lvlInd_interval
-                    optionName: lvlInd
-                    optionPart: interval
-              - type: LayoutBox
-                margin: large
-                stretchFactor: 1
-                children:
-                  - type: TextBox
-                    name: dimInd
-                    label: 'Number of MDS Dimensions:'
-                    format: number
+                  - type: LayoutBox
+                    style: inline
+                    stretchFactor: 1
+                    children:
+                      - type: RadioButton
+                        name: lvlInd_ordinal_primary
+                        optionName: lvlInd
+                        optionPart: ordinal_primary
+                      - type: RadioButton
+                        name: lvlInd_ordinal_secondary
+                        optionName: lvlInd
+                        optionPart: ordinal_secondary
+                      - type: RadioButton
+                        name: lvlInd_ordinal_tertiary
+                        optionName: lvlInd
+                        optionPart: ordinal_tertiary
+                      - type: RadioButton
+                        name: lvlInd_interval
+                        optionName: lvlInd
+                        optionPart: interval
+                  - type: LayoutBox
+                    style: inline
                     margin: large
+                    stretchFactor: 1
+                    children:
+                      - type: TextBox
+                        name: dimInd
+                        label: 'Number of MDS Dimensions:'
+                        format: number
 
           - type: CollapseBox
             label: Transform Similarities to Distances

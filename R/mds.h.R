@@ -9,19 +9,19 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             mdeMDS = "Sym",
             varSym = NULL,
             nmeSym = NULL,
-            lvlSym = "ordinal",
+            lvlSym = "ordinal_primary",
             dimSym = 2,
             xfmSym = "none",
             xfiSym = 0,
             varRaw = NULL,
             nmeRaw = NULL,
-            lvlRaw = "ordinal",
+            lvlRaw = "ordinal_primary",
             dimRaw = 2,
             dirRaw = "col",
             xfmRaw = "none",
             varInd = NULL,
             nmeInd = NULL,
-            lvlInd = "ordinal",
+            lvlInd = "ordinal_primary",
             dimInd = 2,
             xfmInd = "none",
             xfiInd = 0,
@@ -72,8 +72,10 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 lvlSym,
                 options=list(
                     "interval",
-                    "ordinal"),
-                default="ordinal")
+                    "ordinal_primary",
+                    "ordinal_secondary",
+                    "ordinal_tertiary"),
+                default="ordinal_primary")
             private$..dimSym <- jmvcore::OptionInteger$new(
                 "dimSym",
                 dimSym,
@@ -125,8 +127,10 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 lvlRaw,
                 options=list(
                     "interval",
-                    "ordinal"),
-                default="ordinal")
+                    "ordinal_primary",
+                    "ordinal_secondary",
+                    "ordinal_tertiary"),
+                default="ordinal_primary")
             private$..dimRaw <- jmvcore::OptionInteger$new(
                 "dimRaw",
                 dimRaw,
@@ -184,8 +188,10 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 lvlInd,
                 options=list(
                     "interval",
-                    "ordinal"),
-                default="ordinal")
+                    "ordinal_primary",
+                    "ordinal_secondary",
+                    "ordinal_tertiary"),
+                default="ordinal_primary")
             private$..dimInd <- jmvcore::OptionInteger$new(
                 "dimInd",
                 dimInd,
@@ -605,8 +611,10 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{data}
 #' @param nmeSym a string with a variable name pointing to a column containing
 #'   the variable names if \code{data} is a sparse matrix
-#' @param lvlSym \code{'ordinal'} (default) or \code{'metric'}, the
-#'   measurement level of the variables of interest
+#' @param lvlSym \code{'ordinal_primary'} (default),
+#'   \code{'ordinal_secondary'}, \code{'ordinal_tertiary'} or \code{'metric'},
+#'   the measurement level of the variables of interest (and how ranks are
+#'   assigned when the level is ordinal)
 #' @param dimSym an integer (default: 2), number of MDS dimensions
 #' @param xfmSym \code{'none'} (default), \code{'corr'}, \code{'reverse'},
 #'   \code{'reciprocal'}, \code{'ranks'}, \code{'exp'}, \code{'Gaussian'},
@@ -622,8 +630,10 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{data}
 #' @param nmeRaw a string with a variable containg the names for the data in
 #'   the rows (e.g., a participant ID)
-#' @param lvlRaw \code{'ordinal'} (default) or \code{'metric'}, the
-#'   measurement level of the variables of interest
+#' @param lvlRaw \code{'ordinal_primary'} (default),
+#'   \code{'ordinal_secondary'}, \code{'ordinal_tertiary'} or \code{'metric'},
+#'   the measurement level of the variables of interest (and how ranks are
+#'   assigned when the level is ordinal)
 #' @param dimRaw an integer (default: 2), number of MDS dimensions
 #' @param dirRaw \code{'col'} (default) or \code{'row'}, are the distances
 #'   analyzed between columns or rows
@@ -632,8 +642,10 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{data}
 #' @param nmeInd a string with a variable name pointing to a column containing
 #'   the variable names if \code{data} is composed of sparse matrices
-#' @param lvlInd \code{'ordinal'} (default) or \code{'metric'}, the
-#'   measurement level of the variables of interest
+#' @param lvlInd \code{'ordinal_primary'} (default),
+#'   \code{'ordinal_secondary'}, \code{'ordinal_tertiary'} or \code{'metric'},
+#'   the measurement level of the variables of interest (and how ranks are
+#'   assigned when the level is ordinal)
 #' @param dimInd an integer (default: 2), number of MDS dimensions
 #' @param xfmInd \code{'none'} (default), \code{'corr'}, \code{'reverse'},
 #'   \code{'reciprocal'}, \code{'ranks'}, \code{'exp'}, \code{'Gaussian'},
@@ -681,19 +693,19 @@ mds <- function(
     mdeMDS = "Sym",
     varSym,
     nmeSym,
-    lvlSym = "ordinal",
+    lvlSym = "ordinal_primary",
     dimSym = 2,
     xfmSym = "none",
     xfiSym = 0,
     varRaw,
     nmeRaw,
-    lvlRaw = "ordinal",
+    lvlRaw = "ordinal_primary",
     dimRaw = 2,
     dirRaw = "col",
     xfmRaw = "none",
     varInd,
     nmeInd,
-    lvlInd = "ordinal",
+    lvlInd = "ordinal_primary",
     dimInd = 2,
     xfmInd = "none",
     xfiInd = 0,

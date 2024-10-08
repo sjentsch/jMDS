@@ -65,13 +65,18 @@ options:
     options:
       - title: Metric
         name:  interval
-      - title: Ordinal
-        name:  ordinal
-    default: ordinal
+      - title: Ordinal (Prim. Ties)
+        name:  ordinal_primary
+      - title: Ordinal (Second. Ties)
+        name:  ordinal_secondary
+      - title: Ordinal (Tertiary Ties)
+        name:  ordinal_tertiary
+    default: ordinal_primary
     description:
       R: >
-        `'ordinal'` (default) or `'metric'`, the measurement level of the
-        variables of interest
+        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and how
+        ranks are assigned when the level is ordinal) 
 
   - name: dimSym
     type: Integer
@@ -162,13 +167,18 @@ options:
     options:
       - title: Metric
         name:  interval
-      - title: Ordinal
-        name:  ordinal
-    default: ordinal
+      - title: Ordinal (Prim. Ties)
+        name:  ordinal_primary
+      - title: Ordinal (Second. Ties)
+        name:  ordinal_secondary
+      - title: Ordinal (Tertiary Ties)
+        name:  ordinal_tertiary
+    default: ordinal_primary
     description:
       R: >
-        `'ordinal'` (default) or `'metric'`, the measurement level of the
-        variables of interest
+        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and how
+        ranks are assigned when the level is ordinal) 
 
   - name: dimRaw
     type: Integer
@@ -264,13 +274,18 @@ options:
     options:
       - title: Metric
         name:  interval
-      - title: Ordinal
-        name:  ordinal
-    default: ordinal
+      - title: Ordinal (Prim. Ties)
+        name:  ordinal_primary
+      - title: Ordinal (Second. Ties)
+        name:  ordinal_secondary
+      - title: Ordinal (Tertiary Ties)
+        name:  ordinal_tertiary
+    default: ordinal_primary
     description:
       R: >
-        `'ordinal'` (default) or `'metric'`, the measurement level of the
-        variables of interest
+        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and how
+        ranks are assigned when the level is ordinal) 
 
   - name: dimInd
     type: Integer
