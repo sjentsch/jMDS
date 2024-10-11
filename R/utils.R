@@ -1,5 +1,11 @@
 # NB: Functions are in alphabetical order
 
+attLbl <- function(crrDta = NULL, crrVar = c()) {
+    for (C in names(crrDta)) attr(crrDta[[C]], "jmv-desc") <- crrVar[[C]]
+    
+    crrDta
+}
+
 bblPnt <- function(crrSPP = c(), blnBbl = FALSE) if (blnBbl) crrSPP / length(crrSPP) * 8 else rep(1, length(crrSPP))
 
 chkDgn <- function(crrDta = NULL, xfmSym = "none") {
@@ -58,6 +64,15 @@ crtInf <- function(crrMDS = NULL, crrMde = "Sym", crrLvl = "", crrDrR = "col") {
     } else {
         paste0("<p>", paste0(c(genMDS, getVar(paste0("gen", crrMde))), collapse = "</p><p>"), "</p>")
     }
+}
+
+# df2Lst -> see after lst2DF
+
+dst2DF <- function(crrDst = NULL, crrDgn = c()) {
+    crrMtx <- as.matrix(crrDst)
+    if (!is.null(crrDgn)) diag(crrMtx) <- crrDgn
+
+    as.data.frame(crrMtx)
 }
 
 # calculate distance measures for raw data to be used with smacofSym
@@ -136,26 +151,49 @@ lstSbj <- function(numSbj = 1) {
     sprintf(paste0("S_%0", ceiling(log10(numSbj + 1)), "d"), seq(numSbj))
 }
 
-mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
-    crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
-    lngInd <- length(varInd)
-    # check whether the length of the data frame is a multiple of varInd
-    if (nrow(crrDta) %% lngInd != 0) {
+lst2DF <- function(crrLst = NULL, nmeVar = c(), mtxTri = TRUE, mtxSps = FALSE) {
+    crrLst <- lapply(crrLst, function(M) { M <- as.matrix(M); if (mtxTri || mtxSps) M[upper.tri(M)] <- NA; as.data.frame(M) })
+    if (is.null(names(crrLst)))
+        names(crrLst) <- lstSbj(length(crrLst))
+    if (!is.null(nmeVar))
+        crrLst <- lapply(crrLst, function(M) { names(M) <- nmeVar; M })
+    if (mtxSps)
+        crrLst <- lapply(crrLst, function(M) { M <- as.matrix(M); diag(M) <- NA; cbind(data.frame(Name = colnames(M)), as.data.frame(M))[-1, seq(nrow(M))] })
+    crrLsI <- nrow(crrLst[[1]])
+    crrDta <- setNames(as.data.frame(matrix(NA, nrow = length(crrLst) * crrLsI, ncol = ncol(crrLst[[1]]) + 1)), c("ID", names(crrLst[[1]])))
+    for (C in seq_along(crrLst))
+        crrDta[C * crrLsI - seq(crrLsI - 1, 0), ] <- cbind(data.frame(ID = names(crrLst)[C]), crrLst[[C]])
+    
+    crrDta
+}
+
+df2Lst <- function(crrDta = NULL, crrVar = c(), crrNme = c(), crrXfm = "none") {
+    crrNmV <- length(crrVar)
+    crrNmR <- nrow(crrDta) 
+    # check whether the length of the data frame is a multiple of crrVar
+    if (crrNmR %% crrNmV != 0 && crrNmR / crrNmV >= 2) {
         jmvcore::reject(sprintf(paste("The number of rows in the input data (%d) needs to be a multiple of the number of",
                                       "variables to be included in the MDS. Please check whether there are additional rows",
-                                      "in the dataset (e.g., empty rows at the end)."), nrow(crrDta), lngInd))
+                                      "in the dataset (e.g., empty rows at the end)."), crrNmR, crrNmV))
         return(invisible(NULL))
     }
 
-    # ensure that the variables in varInd appear in the same order as in the data set
-    varInd <- intersect(names(crrDta), varInd)
-    numSbj <- nrow(crrDta) / lngInd
-    crrLst <- vector(mode = "list", length = numSbj)
-    for (crrSbj in seq(numSbj)) {
-        crrLst[[crrSbj]] <- dstSym(crrDta[crrSbj * lngInd - seq(lngInd - 1, 0), ], varInd, nmeInd, xfmInd)
+    crrNmS <- crrNmR / crrNmV
+    crrLst <- vector(mode = "list", length = crrNmS)
+    for (crrSbj in seq(crrNmS)) {
+        crrLst[[crrSbj]] <- dstSym(crrDta[crrSbj * crrNmV - seq(crrNmV - 1, 0), ], crrVar, crrNme, crrXfm)
     }
 
-    crrMDS <- smacof::smacofIndDiff(crrLst, ndim = dimInd, type = getTyp(lvlInd), ties = getTie(lvlRaw))
+    crrLst
+}
+
+mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
+    crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
+
+    # ensure that the variables in varInd appear in the same order as in the data set
+    varInd <- intersect(names(crrDta), varInd)
+
+    crrMDS <- smacof::smacofIndDiff(df2Lst(crrDta, varInd), ndim = dimInd, type = getTyp(lvlInd), ties = getTie(lvlRaw))
     attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
 
     crrMDS
@@ -218,6 +256,13 @@ rndMnM <- function(crrExt = 0, addMlt = 1) {
 rowNme <- function(crrDta = NULL, valNme = c()) {
     row.names(crrDta) <- if (length(valNme) > 0) valNme else lstSbj(nrow(crrDta))
     crrDta
+}
+
+rplDsc <- function(crrDsc = NULL, rplDsc = "", rplVar = "") {
+    if (nzchar(rplDsc)) crrDsc[["description"]] <- gsub("_RPLDSC_", rplDsc, crrDsc[["description"]])
+    if (nzchar(rplVar)) crrDsc[["variables"]]   <- gsub("_RPLVAR_", rplVar, crrDsc[["variables"]])
+
+    crrDsc
 }
 
 sumLst <- function(crrLst = NULL) as.numeric(smacof:::sumList(crrLst))
