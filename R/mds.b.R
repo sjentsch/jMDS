@@ -87,7 +87,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             #     of symmetric matrices, number of vars * number of individuals)
             } else if (self$options$mdeMDS == "Ind" &&
                        (length(c(self$options$varInd, self$options$nmeInd)) >= self$options$dimInd + 1) &&
-                       (nrow(crrDta) %% length(self$options$varInd) == 0)) {
+                       (nrow(crrDta) %% length(self$options$varInd) == 0) &&
+                       (nrow(crrDta) /  length(self$options$varInd) >= 2)) {
                 crrMDS <- mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd,
                                  xfmInd = xfmSnI(self$options), dimInd = self$options$dimInd, lvlInd = self$options$lvlInd)
             } else {
