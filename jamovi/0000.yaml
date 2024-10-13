@@ -1,17 +1,20 @@
 ---
 title: Multidimensional Scaling (MDS) for jamovi
 name: jMDS
-version: 0.0.1
+version: 0.1.0
 jms: '1.0'
 authors:
   - Sebastian Jentschke
   - Hans-Rüdiger Pfister
 maintainer: Sebastian Jentschke <sebastian.jentschke@uib.no>
-date: '2024-09-17'
+date: '2024-10-12'
 type: R
 description: >-
-  More about what it does (maybe more than one line) Use four spaces when
-  indenting paragraphs within the Description.
+  The module implements Multidimensional Scaling (MDS) based upon the `smacof`
+  R-package. It permits to calculate and visualize MDS solutions for symmetric
+  matrices (e.g., correlations or distances), raw data (with individuals in rows
+  and variables in columns), or for individual differences (with symmetric or
+  sparse matrices, one for each participant, concatenated over rows).
 analyses:
   - title: Multidimensional Scaling
     name: mds
@@ -20,45 +23,195 @@ analyses:
     menuTitle: Multidimensional Scaling
     description: Perform Multidimensional Scaling
 datasets:
-  - name: Cars_SymAll
-    path: Cars4MDS_FULL.omv
-    description: Format Example (Symmetric)
-  - name: Cars_SymAll
-    path: Cars4MDS_TRILF.omv
-    description: Format Example (Lower Triang, Full)
-  - name: Cars_SymAll
-    path: Cars4MDS_TRILS.omv
-    description: Format Example (Lower Triang, Sparse)
-  - name: Cars_SymAll
-    path: Cars4MDS_TRIUF.omv
-    description: Format Example (Upper Triang, Full)
-  - name: Cars_SymAll
-    path: Cars4MDS_TRIUS.omv
-    description: Format Example (Upper Triang, Sparse)
   - name: Breakfast
-    path: breakfast.omv
+    path: Breakfast.omv
     description: Rank Several Breakfast Items (Raw Data)
+    tags:
+      - Raw Data
+  - name: Cars (Symmetric)
+    path: Cars4MDS_SYMM.omv
+    description: Example for how to format data (symmetric)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Cars (Lower Triang.)
+    path: Cars4MDS_TRILF.omv
+    description: Example for how to format data (lower triang)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Cars (Sparse, Lower)
+    path: Cars4MDS_TRILS.omv
+    description: Example for how to format data (sparse, lower)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Cars (Upper Triang.)
+    path: Cars4MDS_TRIUF.omv
+    description: Example for how to format data (upper triang.)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Cars (Sparse, Upper)
+    path: Cars4MDS_TRIUS.omv
+    description: Example for how to format data (sparse, upper)
+    tags:
+      - Symmetric
+      - Distances
   - name: Country Demographics
     path: Demography_2022.omv
     description: Several Country Demographics (e.g, GDP)
-  - name: European Distances
-    path: Eurodist.omv
+    tags:
+      - Raw Data
+  - name: Crime Rates (Correlations)
+    path: Crimes_CORR_SPRS.omv
+    description: U.S. Crime Rates
+    tags:
+      - Symmetric
+      - Correlations
+  - name: Crime Rates (Distances)
+    path: Crimes_DIST_SPRS.omv
+    description: U.S. Crime Rates
+    tags:
+      - Symmetric
+      - Distances
+  - name: Color Similarities (Symmetric)
+    path: Ekman_SIML_SYMM.omv
+    description: Color Similarities (Ekman, 1964)
+    tags:
+      - Symmetric
+      - Similarities
+  - name: Color Similarities (Sparse)
+    path: Ekman_SIML_SPRS.omv
+    description: Color Similarities (Ekman, 1964)
+    tags:
+      - Symmetric
+      - Similarities
+  - name: Color Distances (Symmetric)
+    path: Ekman_DIST_SYMM.omv
+    description: Color Distances (Ekman, 1964)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Color Distances (Sparse)
+    path: Ekman_DIST_SPRS.omv
+    description: Color Distances (Ekman, 1964)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Distances Between European Cities
+    path: EuropeanDistances.omv
     description: Distances Between Some European Cities
-  - name: Margarine (Symm. Matrix)
-    path: Margarine_FULL.omv
-    description: Margarine (for Ind. Diff, Symm. Matrix)
-  - name: Margarine (Triang. + Diag.)
-    path: Margarine_TRILD.omv
-    description: Margarine (for Ind. Diff, Triang. + Diag.)
-  - name: Margarine (Triang.)
-    path: Margarine_TRILF.omv
+    tags:
+      - Symmetric
+      - Distances
+  - name: Distances between Facial Expressions
+    path: FacialExpressions.omv
+    description: How dissimilar 13 facial expressions were rated (Abelson & Sermat, 1962)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Distances Between French Cities
+    path: FrenchDistances.omv
+    description: Distances Between Some French Cities
+    tags:
+      - Symmetric
+      - Distances
+  - name: Color Distances (Helm, 1964)
+    path: Helm.omv
+    description: Color similarity ratings from Helm (1964) transformed into distances
+    tags:
+      - Individual Diff.
+      - Distances
+  - name: Distances Between Kinship Terms
+    path: Kinship.omv
+    description: How ofter were kinship terms not grouped together?
+    tags:
+      - Symmetric
+      - Distances
+  - name: Phonic / Reading Skills (Subtest Correl.)
+    path: KIPT_CORR.omv
+    description: Correlations between subtests of the Kennedy Institute Phonics Test (KIPT)
+    tags:
+      - Symmetric
+      - Correlations
+  - name: Phonic / Reading Skills (Subtest Distances)
+    path: KIPT_DIST.omv
+    description: Distances between subtests of the Kennedy Institute Phonics Test (KIPT)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Management Performance (Correlations)
+    path: Lawler_CORR.omv
+    description: Similarity in management performance ratings between raters
+    tags:
+      - Symmetric
+      - Correlations
+  - name: Management Performance (Distances)
+    path: Lawler_DIST.omv
+    description: Distances between management performance ratings for different raters
+    tags:
+      - Symmetric
+      - Distances
+  - name: Margarine (Symmetric Matrices)
+    path: Margarine_SYMM.omv
+    description: Margarine ratings from different raters
+    tags:
+      - Individual Diff.
+      - Distances
+  - name: Margarine (Triang. Matrices)
+    path: Margarine_TRIL.omv
     description: Margarine (for Ind. Diff, Triang.)
-  - name: Margarine (Sparse)
+    tags:
+      - Individual Diff.
+      - Distances
+  - name: Margarine (Sparse Matrices)
     path: Margarine_SPRS.omv
     description: Margarine (for Ind. Diff, Sparse)
+    tags:
+      - Individual Diff.
+      - Distances
+  - name: Portrait Values Questionnaire
+    path: PortraitValuesQuestionnaire.omv
+    description: Assesment according to Schwartz' theory of basic human values
+    tags:
+      - Raw Data
   - name: Wenchuan Eathquake
     path: Wenchuan.omv
-    description: Psychol. Conseq. of the Wenchuan Earthquake
+    description: PTSD Symptoms After the Wenchuan Earthquake
+    tags:
+      - Symmetric
+      - Distances
+  - name: Rating of Different Wines
+    path: WineRatings.omv
+    description: Differences wine-ratings between judges
+    tags:
+      - Individual Diff.
+      - Distances
+  - name: Similarity Among Nations
+    path: Wish_SIML.omv
+    description: Similarity among nations (Wish, 1971)
+    tags:
+      - Symmetric
+      - Similarities
+  - name: Distances Between Nations
+    path: Wish_DIST.omv
+    description: Distances (transf. from similarity) between nations (Wish, 1971)
+    tags:
+      - Symmetric
+      - Distances
+  - name: Working Values (East vs. West Germany)
+    path: WorkingValues_EastWestGermany.omv
+    description: Differences in Working Values (East vs. West Germany; 1991)
+    tags:
+      - Individual Diff.
+      - Correlations
+  - name: Distances Between Stars in Different Zodiac Signs
+    path: ZodiacDistances.omv
+    description: Distances the 10 Brightest Stars in Different Zodiac Signs
+    tags:
+      - Symmetric
+      - Distances
 usesNative: true
 minApp: 2.5.0
 

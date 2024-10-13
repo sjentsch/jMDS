@@ -1,12 +1,16 @@
 Package: jMDS
 Type: Package
 Title: Multidimensional Scaling (MDS) for jamovi
-Version: 0.0.1
-Author: Hans-Rüdiger Pfister, Sebastian Jentschke
+Version: 0.1.0
+Author: Sebastian Jentschke, Hans-Rüdiger Pfister
 Maintainer: Sebastian Jentschke <sebastian.jentschke@uib.no>
 Description:
-    More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+    The module implements Multidimensional Scaling (MDS) based upon the
+    `smacof` R-package. It permits to calculate and visualize MDS solutions
+    for symmetric matrices (e.g., correlations or distances), raw data (with
+    individuals in rows and variables in columns), or for individual
+    differences (with symmetric or sparse matrices, one for each participant,
+    concatenated over rows).
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
