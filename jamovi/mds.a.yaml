@@ -90,7 +90,7 @@ options:
   - name: xfmSym
     type: List
     options:
-      - title: Already Distances (no conversion)
+      - title: Already Distances (no transform.)
         name:  none
       - title: Transform Correlations
         name:  corr
@@ -110,7 +110,7 @@ options:
         name:  gravity
       - title: Confusion Proportions
         name:  confusion
-      - title: Transition frequencies
+      - title: Transition Frequencies
         name:  transition
       - title: Membership
         name:  membership
@@ -205,7 +205,7 @@ options:
   - name: xfmRaw
     type: List
     options:
-      - title: Already Distances (no conversion)
+      - title: Already Distances (no transform.)
         name:  none
       - title: Reverse (for preferences or ratings)
         name:  reverse
@@ -269,6 +269,19 @@ options:
         a string with a variable name pointing to a column containing the
         variable names if `data` is composed of sparse matrices
 
+  - name: id_Ind
+    type: Variable
+    suggested:
+      - nominal
+    permitted:
+      - factor
+      - numeric
+    rejectInf: false
+    description:
+      R: >
+        a string with a variable name pointing to a column containing the
+        IDs for the individuals that are in `data`
+
   - name: lvlInd
     type: List
     options:
@@ -299,7 +312,7 @@ options:
   - name: xfmInd
     type: List
     options:
-      - title: Already Distances (no conversion)
+      - title: Already Distances (no transform.)
         name:  none
       - title: Transform Correlations
         name:  corr
@@ -319,7 +332,7 @@ options:
         name:  gravity
       - title: Confusion Proportions
         name:  confusion
-      - title: Transition frequencies
+      - title: Transition Frequencies
         name:  transition
       - title: Membership
         name:  membership

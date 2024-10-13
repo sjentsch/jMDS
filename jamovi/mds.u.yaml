@@ -222,6 +222,13 @@ children:
                     name: nmeInd
                     maxItemCount: 1
                     isTarget: true
+              - type: TargetLayoutBox
+                label: Variable With IDs of the Individuals
+                children:
+                  - type: VariablesListBox
+                    name: id_Ind
+                    maxItemCount: 1
+                    isTarget: true
 
           - type: LayoutBox
             margin: large
