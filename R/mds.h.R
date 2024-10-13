@@ -64,9 +64,11 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "nmeSym",
                 nmeSym,
                 suggested=list(
-                    "nominal"),
+                    "nominal",
+                    "id"),
                 permitted=list(
-                    "factor"),
+                    "factor",
+                    "id"),
                 rejectInf=FALSE)
             private$..lvlSym <- jmvcore::OptionList$new(
                 "lvlSym",
@@ -119,9 +121,11 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "nmeRaw",
                 nmeRaw,
                 suggested=list(
-                    "nominal"),
+                    "nominal",
+                    "id"),
                 permitted=list(
-                    "factor"),
+                    "factor",
+                    "id"),
                 rejectInf=FALSE)
             private$..lvlRaw <- jmvcore::OptionList$new(
                 "lvlRaw",
@@ -179,7 +183,8 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "nmeInd",
                 nmeInd,
                 suggested=list(
-                    "nominal"),
+                    "nominal",
+                    "id"),
                 permitted=list(
                     "factor",
                     "numeric"),
@@ -188,7 +193,8 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "id_Ind",
                 id_Ind,
                 suggested=list(
-                    "nominal"),
+                    "nominal",
+                    "id"),
                 permitted=list(
                     "factor",
                     "numeric"),
@@ -806,8 +812,6 @@ mds <- function(
             `if`( ! missing(nmeInd), nmeInd, NULL),
             `if`( ! missing(id_Ind), id_Ind, NULL))
 
-    for (v in nmeSym) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
-    for (v in nmeRaw) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
 
     options <- mdsOptions$new(
         mdeMDS = mdeMDS,
