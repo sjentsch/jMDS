@@ -59,12 +59,6 @@ cnvTrn <- function(crrDta = NULL, xfmSym = "none") {
 
 crtInf <- function(crrMDS = NULL, crrMde = "Sym", crrLvl = "", crrDrR = "col") {
     if (!is.null(crrMDS)) {
-print("crtInf")
-print(attr(crrMDS, "crrArg"))
-print(sprintf(paste("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
-                      "<p>Stress-1 value: <strong>%.4f</strong></p><p>%s</p>"),
-                crrMDS$model, getTyp(crrLvl), ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj),
-                crrMDS$niter, crrMDS$stress, dcdXfm(attr(crrMDS, "crrArg"))))
         sprintf(paste("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
                       "<p>Stress-1 value: <strong>%.4f</strong></p><p>%s</p>"),
                 crrMDS$model, getTyp(crrLvl), ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj),
@@ -106,8 +100,8 @@ dcdXfm <- function(crrArg = NULL) {
             "Before calculating the MDS, the membership was calculated for the values in the data matrix."
         } else if (crrXfm == "probability") {
             "Before calculating the MDS, a probability transformation was applied to the values in the data matrix."
-        } else if (crrXfm == "integer") {
-            "Before calculating the MDS, the values in the data matrix were subtracted from an integer value."
+        } else if (is.integer(crrXfm)) {
+            sprintf("Before calculating the MDS, the values in the data matrix were subtracted from an integer value (%d).", crrXfm)
         } else {
             jmvcore::reject(sprintf("Invalid transformation %s.", crrXfm))
             return(c())
