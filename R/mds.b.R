@@ -25,6 +25,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .init = function() {
             # initialize table and help / information
             private$.prpCfg()
+            private$.prpOut()
             private$.genInf()
             private$.addInf()
         },
@@ -32,6 +33,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMDS <- self$getMDS
             if (!is.null(crrMDS)) {
                 private$.fllCfg()
+                private$.fllOut()
                 for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(crrMDS)
             }
             private$.genInf()
@@ -55,7 +57,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # the variables to be used in the MDS are converted to numeric
             for (crrVar in mdsVar)
                 crrDta[[crrVar]] <- jmvcore::toNumeric(self$data[[crrVar]])
-            attr(crrDta, 'row.names') <- seq_along(crrDta[[1]])
+            attr(crrDta, 'row.names') <- rownames(self$data)
             attr(crrDta, 'class') <- 'data.frame'
 
             return(crrDta)
@@ -284,6 +286,37 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             print(crrFig + ggtheme)
             TRUE
+        },
+        # writing configuration data to the current data frame
+        .prpOut = function() {
+            crrMde <- self$options$mdeMDS
+            crrDim <- self$options[[paste0("dim", crrMde)]]
+            if (self$options$ov_Cfg && length(self$options[[paste0("nme", crrMde)]]) == 0) {
+                self$results$ov_Cfg$set(seq(crrDim), sprintf("MDS_D%d", seq(crrDim)),
+                                        sprintf("MDS Configuration (Dimension %d)", seq(crrDim)), rep('continuous', crrDim))
+            }
+        },
+        .fllOut = function() {
+            crrDta <- self$getDta
+            if (is.null(crrDta)) return(invisible(NULL))
+            crrMDS <- self$getMDS
+            if (is.null(crrMDS)) return(invisible(NULL))
+
+            crrMde <- self$options$mdeMDS
+            if (self$options$ov_Cfg && self$results$ov_Cfg$isNotFilled() && length(self$options[[paste0("nme", crrMde)]]) == 0) {
+                if        (crrMde == "Sym") {
+                    outDta <- as.data.frame(crrMDS$conf)
+                } else if (crrMde == "Ind") {
+                    outDta <- lst2DF(crrMDS$conf, names(crrMDS$conf[[1]]), mtxTri = FALSE)[, -1]
+                } else {
+                    return(invisible(NULL))
+                }
+                if (!is.null(outDta) && nrow(crrDta) == nrow(outDta)) {
+                    self$results$ov_Cfg$setRowNums(rownames(crrDta))
+                    for (i in seq_along(outDta))
+                        self$results$ov_Cfg$setValues(index = i, outDta[, i])
+                }
+            }
         }
     )
 )

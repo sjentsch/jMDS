@@ -358,4 +358,5 @@ children:
         children:
           - type: Output
             name: ov_Cfg
-            label: Configurations
+            label: Configurations (When “Symmetric” or “Individual Diff.”; Data Must Not Be Sparse)
+            enable: (mdeMDS:Sym || mdeMDS:Ind)
