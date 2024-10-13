@@ -21,6 +21,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             xfmRaw = "none",
             varInd = NULL,
             nmeInd = NULL,
+            id_Ind = NULL,
             lvlInd = "ordinal_primary",
             dimInd = 2,
             xfmInd = "none",
@@ -183,6 +184,15 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "factor",
                     "numeric"),
                 rejectInf=FALSE)
+            private$..id_Ind <- jmvcore::OptionVariable$new(
+                "id_Ind",
+                id_Ind,
+                suggested=list(
+                    "nominal"),
+                permitted=list(
+                    "factor",
+                    "numeric"),
+                rejectInf=FALSE)
             private$..lvlInd <- jmvcore::OptionList$new(
                 "lvlInd",
                 lvlInd,
@@ -279,6 +289,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..xfmRaw)
             self$.addOption(private$..varInd)
             self$.addOption(private$..nmeInd)
+            self$.addOption(private$..id_Ind)
             self$.addOption(private$..lvlInd)
             self$.addOption(private$..dimInd)
             self$.addOption(private$..xfmInd)
@@ -311,6 +322,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         xfmRaw = function() private$..xfmRaw$value,
         varInd = function() private$..varInd$value,
         nmeInd = function() private$..nmeInd$value,
+        id_Ind = function() private$..id_Ind$value,
         lvlInd = function() private$..lvlInd$value,
         dimInd = function() private$..dimInd$value,
         xfmInd = function() private$..xfmInd$value,
@@ -342,6 +354,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..xfmRaw = NA,
         ..varInd = NA,
         ..nmeInd = NA,
+        ..id_Ind = NA,
         ..lvlInd = NA,
         ..dimInd = NA,
         ..xfmInd = NA,
@@ -383,7 +396,25 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="genInf",
-                clearWith=list(),
+                clearWith=list(
+                    "mdeMDS",
+                    "varSym",
+                    "varRaw",
+                    "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
+                    "xfmSym",
+                    "xfmRaw",
+                    "xfmInd",
+                    "lvlSym",
+                    "lvlRaw",
+                    "lvlInd",
+                    "dimSym",
+                    "dimRaw",
+                    "dimInd",
+                    "dirRaw"),
                 content=""))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -398,6 +429,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -428,6 +463,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -454,6 +493,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -477,6 +520,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -500,6 +547,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -523,6 +574,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -544,6 +599,8 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varInd",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmInd",
                     "lvlInd",
                     "dimInd")))
@@ -564,6 +621,10 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "varSym",
                     "varRaw",
                     "varInd",
+                    "nmeSym",
+                    "nmeRaw",
+                    "nmeInd",
+                    "id_Ind",
                     "xfmSym",
                     "xfmRaw",
                     "xfmInd",
@@ -572,7 +633,8 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "lvlInd",
                     "dimSym",
                     "dimRaw",
-                    "dimInd")))}))
+                    "dimInd",
+                    "dirRaw")))}))
 
 mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "mdsBase",
@@ -642,6 +704,8 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{data}
 #' @param nmeInd a string with a variable name pointing to a column containing
 #'   the variable names if \code{data} is composed of sparse matrices
+#' @param id_Ind a string with a variable name pointing to a column containing
+#'   the IDs for the individuals that are in \code{data}
 #' @param lvlInd \code{'ordinal_primary'} (default),
 #'   \code{'ordinal_secondary'}, \code{'ordinal_tertiary'} or \code{'metric'},
 #'   the measurement level of the variables of interest (and how ranks are
@@ -705,6 +769,7 @@ mds <- function(
     xfmRaw = "none",
     varInd,
     nmeInd,
+    id_Ind,
     lvlInd = "ordinal_primary",
     dimInd = 2,
     xfmInd = "none",
@@ -729,6 +794,7 @@ mds <- function(
     if ( ! missing(nmeRaw)) nmeRaw <- jmvcore::resolveQuo(jmvcore::enquo(nmeRaw))
     if ( ! missing(varInd)) varInd <- jmvcore::resolveQuo(jmvcore::enquo(varInd))
     if ( ! missing(nmeInd)) nmeInd <- jmvcore::resolveQuo(jmvcore::enquo(nmeInd))
+    if ( ! missing(id_Ind)) id_Ind <- jmvcore::resolveQuo(jmvcore::enquo(id_Ind))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
@@ -737,7 +803,8 @@ mds <- function(
             `if`( ! missing(varRaw), varRaw, NULL),
             `if`( ! missing(nmeRaw), nmeRaw, NULL),
             `if`( ! missing(varInd), varInd, NULL),
-            `if`( ! missing(nmeInd), nmeInd, NULL))
+            `if`( ! missing(nmeInd), nmeInd, NULL),
+            `if`( ! missing(id_Ind), id_Ind, NULL))
 
     for (v in nmeSym) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
     for (v in nmeRaw) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
@@ -758,6 +825,7 @@ mds <- function(
         xfmRaw = xfmRaw,
         varInd = varInd,
         nmeInd = nmeInd,
+        id_Ind = id_Ind,
         lvlInd = lvlInd,
         dimInd = dimInd,
         xfmInd = xfmInd,

@@ -49,6 +49,9 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # the name variable is converted to character
             crrVar <- self$options[[paste0("nme", crrMde)]]
             if (length(crrVar) > 0) crrDta[[crrVar]] <- as.character(self$data[[crrVar]])
+            # for mode "Ind", there might be an id_Ind variable
+            crrVar <- rep(self$options[[paste0("id_", crrMde)]], crrMde == "Ind")
+            if (length(crrVar) > 0) crrDta[[crrVar]] <- as.character(self$data[[crrVar]])
             # the variables to be used in the MDS are converted to numeric
             for (crrVar in mdsVar)
                 crrDta[[crrVar]] <- jmvcore::toNumeric(self$data[[crrVar]])
@@ -68,7 +71,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                  crrMDS <- readRDS(crrFle)
                  if (chkMDS(crrMDS, self$options, crrDta)) return(crrMDS)
             }
-            
+           
             # if we cannot use the stored / loaded solution (e.g., because settings have changed)
             # we need to calculate it again
             # [1] symmetric input data (e.g., distances, correlations, etc.)
@@ -89,7 +92,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        (length(c(self$options$varInd, self$options$nmeInd)) >= self$options$dimInd + 1) &&
                        (nrow(crrDta) %% length(self$options$varInd) == 0) &&
                        (nrow(crrDta) /  length(self$options$varInd) >= 2)) {
-                crrMDS <- mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd,
+                crrMDS <- mdsInd(crrDta = crrDta, varInd = self$options$varInd, nmeInd = self$options$nmeInd, id_Ind = self$options$id_Ind,
                                  xfmInd = xfmSnI(self$options), dimInd = self$options$dimInd, lvlInd = self$options$lvlInd)
             } else {
                 return(NULL)
@@ -269,8 +272,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 print(pltErr(sprintf("A weights diagram can not be produced\nfor %s.", crrMDS$model)))
                 return(TRUE)
             }
-            
-            crrDta <- as.data.frame(t(vapply(crrMDS$cweights, diag, numeric(2))), row.names = lstSbj(length(crrMDS$cweights)))
+
+            crrDta <- as.data.frame(t(vapply(crrMDS$cweights, diag, numeric(2))), row.names = names(crrMDS$delta))
             crrFig <- ggplot2::ggplot(crrDta) +
                       ggplot2::geom_segment(ggplot2::aes(x = 0, xend = D1, y = 0, yend = D2), arrow = ggplot2::arrow()) +
                       ggplot2::geom_text(ggplot2::aes(x = D1, y = D2, label = rownames(crrDta)), hjust = 0, nudge_x = 0.05) +
