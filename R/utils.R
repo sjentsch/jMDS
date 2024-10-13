@@ -24,22 +24,7 @@ chkMDS <- function(crrMDS = NULL, crrOpt = NULL, crrDta = NULL) {
     eqlMDS
 }
 
-cnvTrF <- function(crrDta = NULL, xfmSym = "none") {
-    if        (all(is.na(crrDta[upper.tri(crrDta)]))) {
-        crrDta[upper.tri(crrDta)] <- t(crrDta)[upper.tri(crrDta)]
-        if (all(is.na(diag(as.matrix(crrDta))))) crrDta[row(crrDta) == col(crrDta)] <- ifelse(xfmSym %in% c("corr"), 1, 0)
-    } else if (all(is.na(crrDta[lower.tri(crrDta)]))) {
-        crrDta[lower.tri(crrDta)] <- t(crrDta)[lower.tri(crrDta)]
-        if (all(is.na(diag(as.matrix(crrDta))))) crrDta[row(crrDta) == col(crrDta)] <- ifelse(xfmSym %in% c("corr"), 1, 0)
-    } else {
-        jmvcore::reject("Input data are a triangular matrix, but could not be converted")
-        return(invisible(NULL))
-    }
-
-    crrDta
-}
-
-cnvTrS <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
+cnvSps <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
     if        (all(is.na(crrDta[, varSym][upper.tri(crrDta[, varSym])])) && all(varSym[-1] == as.character(crrDta[, nmeSym][-nrow(crrDta)]))) {
         crrDta <- setNames(rbind(NA, cbind(crrDta[, varSym], NA)), c(varSym, as.character(crrDta[nrow(crrDta), nmeSym])))
         crrDta[upper.tri(crrDta)] <- t(crrDta)[upper.tri(crrDta)]
@@ -57,12 +42,107 @@ cnvTrS <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
     crrDta
 }
 
+cnvTrn <- function(crrDta = NULL, xfmSym = "none") {
+    if        (all(is.na(crrDta[upper.tri(crrDta)]))) {
+        crrDta[upper.tri(crrDta)] <- t(crrDta)[upper.tri(crrDta)]
+        if (all(is.na(diag(as.matrix(crrDta))))) crrDta[row(crrDta) == col(crrDta)] <- ifelse(xfmSym %in% c("corr"), 1, 0)
+    } else if (all(is.na(crrDta[lower.tri(crrDta)]))) {
+        crrDta[lower.tri(crrDta)] <- t(crrDta)[lower.tri(crrDta)]
+        if (all(is.na(diag(as.matrix(crrDta))))) crrDta[row(crrDta) == col(crrDta)] <- ifelse(xfmSym %in% c("corr"), 1, 0)
+    } else {
+        jmvcore::reject("Input data are a triangular matrix, but could not be converted")
+        return(invisible(NULL))
+    }
+
+    crrDta
+}
+
 crtInf <- function(crrMDS = NULL, crrMde = "Sym", crrLvl = "", crrDrR = "col") {
     if (!is.null(crrMDS)) {
-        sprintf("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p><p>Stress-1 value: <strong>%.4f</strong></p>",
-                crrMDS$model, crrLvl, ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj), crrMDS$niter, crrMDS$stress)
+print("crtInf")
+print(attr(crrMDS, "crrArg"))
+print(sprintf(paste("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
+                      "<p>Stress-1 value: <strong>%.4f</strong></p><p>%s</p>"),
+                crrMDS$model, getTyp(crrLvl), ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj),
+                crrMDS$niter, crrMDS$stress, dcdXfm(attr(crrMDS, "crrArg"))))
+        sprintf(paste("<p>Estimated <strong>%s</strong> (of type \"%s\") with %d objects in %d iterations.</p>",
+                      "<p>Stress-1 value: <strong>%.4f</strong></p><p>%s</p>"),
+                crrMDS$model, getTyp(crrLvl), ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj),
+                crrMDS$niter, crrMDS$stress, dcdXfm(attr(crrMDS, "crrArg")))
     } else {
         paste0("<p>", paste0(c(genMDS, getVar(paste0("gen", crrMde))), collapse = "</p><p>"), "</p>")
+    }
+}
+
+# decode transformations - has to be in sync with the
+# transformation operations defined in mds.a.yaml
+dcdXfm <- function(crrArg = NULL) {
+    crrMde <- crrArg[["mdeMDS"]]
+    crrXfm <- crrArg[[paste0("xfm", crrMde)]]
+    if        (crrMde %in% c("Sym", "Ind")) {
+        if        (crrXfm == "none") {
+            "Matrix contained already distances (i.e., no transformation was applied)."
+        } else if (crrXfm == "corr") {
+            "Before calculating the MDS, the correlations in the data matrix were transformed."
+        } else if (crrXfm == "reverse") {
+            "Before calculating the MDS, the values in the data matrix were subtracted from the range."
+        } else if (crrXfm == "reciprocal") {
+            "Before calculating the MDS, the reciprocal of each valiues in the data matrix was calculated."
+        } else if (crrXfm == "ranks") {
+            "Before calculating the MDS, the values in the data matrix were ranked."
+        } else if (crrXfm == "exp") {
+            "Before calculating the MDS, the exponential of each valiues in the data matrix was calculated."
+        } else if (crrXfm == "Gaussian") {
+            "Before calculating the MDS, a Gaussian transformation was applied to the values in the data matrix."
+        } else if (crrXfm == "cooccurrence") {
+            "Before calculating the MDS, co-occurrences were calculated for the values in the data matrix."
+        } else if (crrXfm == "gravity") {
+            "Before calculating the MDS, a gravity transformation was applied to the values in the data matrix."
+        } else if (crrXfm == "confusion") {
+            "Before calculating the MDS, confusion proportions were calculated for the values in the data matrix."
+        } else if (crrXfm == "transition") {
+            "Before calculating the MDS, transition frequencies were calculated for the values in the data matrix."
+        } else if (crrXfm == "membership") {
+            "Before calculating the MDS, the membership was calculated for the values in the data matrix."
+        } else if (crrXfm == "probability") {
+            "Before calculating the MDS, a probability transformation was applied to the values in the data matrix."
+        } else if (crrXfm == "integer") {
+            "Before calculating the MDS, the values in the data matrix were subtracted from an integer value."
+        } else {
+            jmvcore::reject(sprintf("Invalid transformation %s.", crrXfm))
+            return(c())
+        }
+    } else if (crrMde %in% c("Raw")) {
+        crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
+        dscR2S <- "(resulting in a symmetric matrix that afterwards was analyzed using smacofSym)"
+        if        (crrXfm == "none") {
+            "Matrix contained already distances (i.e., no transformation was applied)."
+        } else if (crrXfm == "reverse") {
+            "Before calculating the MDS, the values in the data matrix were subtracted from the range."
+        } else if (crrXfm == "rank") {
+            "Before calculating the MDS, the values in the data matrix were ranked."
+        } else if (crrXfm %in% c("pearson", "kendall", "spearman")) {
+            sprintf("Before calculating the MDS, %s-correlations (over %s) were calculated and then transformed to distances %s.",
+                    tools:toTitleCase(crrXfm), crrDir, dscR2S)
+        } else if (grepl("minkowski_[1-4]", crrXfm)) {
+            sprintf("Before calculating the MDS, %s distances (%sover %s) were calculated%s.",
+                    gsub("minkowski", "Minkowski", gsub("minkowski_2", "Euclidean", gsub("minkowski_1", "Manhattan", crrXfm))),
+                    ifelse(grepl("minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm)), ""),
+                    crrDir, dscR2S)
+        } else if (grepl("z_minkowski_[1-4]", crrXfm)) {
+            sprintf("Before calculating the MDS, the data were first z-transformed and then %s distances (%sover %s) were calculated %s.",
+                    gsub("z_minkowski", "Minkowski", gsub("z_minkowski_2", "Euclidean", gsub("z_minkowski_1", "Manhattan", crrXfm))),
+                    ifelse(grepl("z_minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm)), ""),
+                    crrDir, dscR2S)
+        } else if (crrXfm == "binary") {
+            sprintf("Before calculating the MDS, Jaccard distances (over %s) were calculated%s.", crrDir, dscR2S)
+        } else if (crrXfm == "z_binary") {
+            sprintf("Before calculating the MDS, the data were first z-transformed and then Jaccard distances (over %s) were calculated %s.",
+                    crrDir, dscR2S)
+        } else {
+            jmvcore::reject(sprintf("Invalid transformation %s.", crrXfm))
+            return(c())
+        }
     }
 }
 
@@ -100,16 +180,18 @@ dstR4R <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none") {
 }
 
 dstSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
+    # remove other columns than varSym and nmeSym
+    crrDta <- crrDta[, c(nmeSym, varSym)]
     # checks whether the input data frame is symmetric, transform if not
     if (isSymmetric(unname(as.matrix(crrDta)))) {
         crrDta <- as.matrix(crrDta)
         rownames(crrDta) <- varSym
     } else {
        if (diff(dim(crrDta)) == 0 && !is.null(varSym) && length(varSym) == dim(crrDta)[1]) {
-           crrDta <- cnvTrF(crrDta, xfmSym)
+           crrDta <- cnvTrn(crrDta, xfmSym)
            rownames(crrDta) <- varSym
        } else if (diff(dim(crrDta)) == 1 && !is.null(nmeSym)) {
-           crrDta <- cnvTrS(crrDta, varSym, nmeSym, xfmSym)
+           crrDta <- cnvSps(crrDta, varSym, nmeSym, xfmSym)
        } else {
            jmvcore::reject("Input data are neither a symmetric nor a triangular matrix")
            return(invisible(NULL))
@@ -133,6 +215,24 @@ dstSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
     } else {
         smacof::sim2diss(crrDta, method = xfmSym, to.dist = TRUE)
     }
+}
+
+getID  <- function(crrID = NULL) {
+    if (length(crrID) == 0) return(c())
+    
+    if (!all(diff(table(crrID)) == 0)) {
+        jmvcore::reject(sprintf(paste("The column %s (chosen as ID variable) has not the same number of entries for all individuals.",
+                                      "This might be due to additional empty lines in the data file."), attr(crrID, "name")))
+        return(c())
+    }
+    if (sum(c(crrID[-1], crrID[1]) != crrID) != length(unique(crrID))) {
+        jmvcore::reject(sprintf(paste("The values in the column %s (chosen as ID variable) need to be consecutive for each individual.",
+                                      "That is, all values for the first individual need to come first, then all values for the second",
+                                      "individual, and so on."), attr(crrID, "name")))
+        return(c())
+    }
+
+    as.character(unique(crrID))
 }
 
 getTie <- function(lvlStr = "") {
@@ -167,7 +267,7 @@ lst2DF <- function(crrLst = NULL, nmeVar = c(), mtxTri = TRUE, mtxSps = FALSE) {
     crrDta
 }
 
-df2Lst <- function(crrDta = NULL, crrVar = c(), crrNme = c(), crrXfm = "none") {
+df2Lst <- function(crrDta = NULL, crrVar = c(), crrNme = c(), crrID = c(), crrXfm = "none") {
     crrNmV <- length(crrVar)
     crrNmR <- nrow(crrDta) 
     # check whether the length of the data frame is a multiple of crrVar
@@ -179,7 +279,8 @@ df2Lst <- function(crrDta = NULL, crrVar = c(), crrNme = c(), crrXfm = "none") {
     }
 
     crrNmS <- crrNmR / crrNmV
-    crrLst <- vector(mode = "list", length = crrNmS)
+    # if crrID is empty, assign create a vector with IDs (S_...)
+    crrLst <- setNames(vector(mode = "list", length = crrNmS), if (is.null(crrID)) lstSbj(crrNmS) else getID(crrDta[, crrID]))
     for (crrSbj in seq(crrNmS)) {
         crrLst[[crrSbj]] <- dstSym(crrDta[crrSbj * crrNmV - seq(crrNmV - 1, 0), ], crrVar, crrNme, crrXfm)
     }
@@ -187,13 +288,14 @@ df2Lst <- function(crrDta = NULL, crrVar = c(), crrNme = c(), crrXfm = "none") {
     crrLst
 }
 
-mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
+mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), id_Ind = c(), xfmInd = "none", dimInd = 2, lvlInd = "ordinal") {
     crrArg <- c(list(mdeMDS = "Ind"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
 
     # ensure that the variables in varInd appear in the same order as in the data set
     varInd <- intersect(names(crrDta), varInd)
 
-    crrMDS <- smacof::smacofIndDiff(df2Lst(crrDta, varInd), ndim = dimInd, type = getTyp(lvlInd), ties = getTie(lvlRaw))
+    crrMDS <- smacof::smacofIndDiff(df2Lst(crrDta, crrVar = varInd, crrID = id_Ind, crrXfm = xfmInd),
+                                    ndim = dimInd, type = getTyp(lvlInd), ties = getTie(lvlInd))
     attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
 
     crrMDS
