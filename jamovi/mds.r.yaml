@@ -6,7 +6,25 @@ jrs:   '1.1'
 items:
   - name: genInf
     type: Html
-    clearWith: []
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
     content: ""
 
   - name: tblCfg
@@ -14,7 +32,26 @@ items:
     title: 'Configuration Table'
     description: a table containing the fitted configurations
     refs:  [ smacof_2009, smacof_2022, jMDS ]
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw, clmSPP ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
+      - clmSPP
     rows: 0
     columns:
       - name: nmeObj
@@ -29,7 +66,28 @@ items:
     height: 400
     renderFun: .pltCfg
     visible: (figCfg)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw, cfgBbl, cfgInX, cfgInY ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
+      - cfgBbl
+      - cfgInX
+      - cfgInY
 
   - name: figShp
     type: Image
@@ -39,7 +97,25 @@ items:
     height: 400
     renderFun: .pltShp
     visible: (figShp)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
 
   - name: figStr
     type: Image
@@ -49,7 +125,25 @@ items:
     height: 400
     renderFun: .pltStr
     visible: (figStr)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
 
   - name: figRes
     type: Image
@@ -59,7 +153,25 @@ items:
     height: 400
     renderFun: .pltRes
     visible: (figRes)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
 
   - name: figHst
     type: Image
@@ -69,7 +181,25 @@ items:
     height: 400
     renderFun: .pltHst
     visible: (figHst)
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd, dirRaw ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
 
   - name: figWgh
     type: Image
@@ -79,7 +209,14 @@ items:
     height: 400
     renderFun: .pltWgh
     visible: (figWgh)
-    clearWith: [ mdeMDS, varInd, xfmInd, lvlInd, dimInd ]
+    clearWith:
+      - mdeMDS
+      - varInd
+      - nmeInd
+      - id_Ind
+      - xfmInd
+      - lvlInd
+      - dimInd
 
   - name: addInf
     type: Html
@@ -92,6 +229,24 @@ items:
     varTitle: Configuration
     varDescription: Configuration from MDS
     measureType: continuous
-    clearWith: [ mdeMDS, varSym, varRaw, varInd, xfmSym, xfmRaw, xfmInd, lvlSym, lvlRaw, lvlInd, dimSym, dimRaw, dimInd ]
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
 
 ...
