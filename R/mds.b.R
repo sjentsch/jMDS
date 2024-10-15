@@ -26,8 +26,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # initialize table and help / information
             private$.prpCfg()
             private$.prpOut()
-            private$.genInf()
-            private$.addInf()
+            private$.shwInf()
         },
         .run = function() {
             crrMDS <- self$getMDS
@@ -36,7 +35,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 private$.fllOut()
                 for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(crrMDS)
             }
-            private$.genInf()
+            private$.shwInf()
         },
         # check (and if necessary convert) input data
         .clnDta = function() {
@@ -105,16 +104,11 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             crrMDS
         },
-        # handling general and additional information messages
-        .genInf = function() {
+        # show general and additional information messages
+        .shwInf = function() {
             crrMde <- self$options$mdeMDS
-            crrInf <- crtInf(self$getMDS, crrMde, self$options[[paste0("lvl", crrMde)]], self$options$dirRaw)
-            self$results$genInf$setContent(crrInf)
-        },
-        .addInf = function() {
-             crrInf <- self$results$addInf
-             crrMde <- self$options$mdeMDS
-             crrInf$setContent(paste0("<p>", paste0(c(addMDS, getVar(paste0("add", crrMde))), collapse = "</p><p>"), "</p>"))
+            self$results$genInf$setContent(crtInf(self$getMDS, crrMde, self$options[[paste0("lvl", crrMde)]], self$options$dirRaw))
+            self$results$addInf$setContent(paste0("<p>", paste(getVar(paste0("add", crrMde)), collapse = "</p><p>"), "</p>"))
         },
         # prepare and fill configuration table
         .prpCfg = function() {

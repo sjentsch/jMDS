@@ -220,13 +220,32 @@ items:
 
   - name: addInf
     type: Html
-    clearWith: []
+    title: 'Additional Information'
+    clearWith:
+      - mdeMDS
+      - varSym
+      - varRaw
+      - varInd
+      - nmeSym
+      - nmeRaw
+      - nmeInd
+      - id_Ind
+      - xfmSym
+      - xfmRaw
+      - xfmInd
+      - lvlSym
+      - lvlRaw
+      - lvlInd
+      - dimSym
+      - dimRaw
+      - dimInd
+      - dirRaw
     content: ""
 
   - name: ov_Cfg
     title: Configurations
     type: Output
-    varTitle: Configuration
+    varTitle: MDS
     varDescription: Configuration from MDS
     measureType: continuous
     clearWith:
