@@ -108,7 +108,7 @@ dcdXfm <- function(crrArg = NULL) {
         }
     } else if (crrMde %in% c("Raw")) {
         crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
-        dscR2S <- "(resulting in a symmetric matrix that afterwards was analyzed using smacofSym)"
+        dscR2S <- "(resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)"
         if        (crrXfm == "none") {
             "Matrix contained already distances (i.e., no transformation was applied)."
         } else if (crrXfm == "reverse") {
@@ -117,7 +117,7 @@ dcdXfm <- function(crrArg = NULL) {
             "Before calculating the MDS, the values in the data matrix were ranked."
         } else if (crrXfm %in% c("pearson", "kendall", "spearman")) {
             sprintf("Before calculating the MDS, %s-correlations (over %s) were calculated and then transformed to distances %s.",
-                    tools:toTitleCase(crrXfm), crrDir, dscR2S)
+                    gsub("\\b([A-Za-z])", "\\U\\1", crrXfm, perl = TRUE), crrDir, dscR2S)
         } else if (grepl("minkowski_[1-4]", crrXfm)) {
             sprintf("Before calculating the MDS, %s distances (%sover %s) were calculated%s.",
                     gsub("minkowski", "Minkowski", gsub("minkowski_2", "Euclidean", gsub("minkowski_1", "Manhattan", crrXfm))),
