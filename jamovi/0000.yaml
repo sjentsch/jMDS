@@ -7,7 +7,7 @@ authors:
   - Sebastian Jentschke
   - Hans-Rüdiger Pfister
 maintainer: Sebastian Jentschke <sebastian.jentschke@uib.no>
-date: '2024-10-12'
+date: '2024-10-18'
 type: R
 description: >-
   The module implements Multidimensional Scaling (MDS) based upon the `smacof`
