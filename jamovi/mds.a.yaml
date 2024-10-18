@@ -71,12 +71,12 @@ options:
         name:  ordinal_secondary
       - title: Ordinal (Tertiary Ties)
         name:  ordinal_tertiary
-    default: ordinal_primary
+    default: ordinal_secondary
     description:
       R: >
-        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
-        or `'metric'`, the measurement level of the variables of interest (and how
-        ranks are assigned when the level is ordinal) 
+        `'ordinal_primary'`, `'ordinal_secondary'` (default), `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and
+        how ranks are assigned when the level is ordinal) 
 
   - name: dimSym
     type: Integer
@@ -173,12 +173,12 @@ options:
         name:  ordinal_secondary
       - title: Ordinal (Tertiary Ties)
         name:  ordinal_tertiary
-    default: ordinal_primary
+    default: ordinal_secondary
     description:
       R: >
-        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
-        or `'metric'`, the measurement level of the variables of interest (and how
-        ranks are assigned when the level is ordinal) 
+        `'ordinal_primary'`, `'ordinal_secondary'` (default), `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and
+        how ranks are assigned when the level is ordinal) 
 
   - name: dimRaw
     type: Integer
@@ -293,12 +293,12 @@ options:
         name:  ordinal_secondary
       - title: Ordinal (Tertiary Ties)
         name:  ordinal_tertiary
-    default: ordinal_primary
+    default: ordinal_secondary
     description:
       R: >
-        `'ordinal_primary'` (default), `'ordinal_secondary'`, `'ordinal_tertiary'`
-        or `'metric'`, the measurement level of the variables of interest (and how
-        ranks are assigned when the level is ordinal) 
+        `'ordinal_primary'`, `'ordinal_secondary'` (default), `'ordinal_tertiary'`
+        or `'metric'`, the measurement level of the variables of interest (and
+        how ranks are assigned when the level is ordinal) 
 
   - name: dimInd
     type: Integer
