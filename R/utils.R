@@ -245,12 +245,14 @@ lstSbj <- function(numSbj = 1) {
     sprintf(paste0("S_%0", ceiling(log10(numSbj + 1)), "d"), seq(numSbj))
 }
 
-lst2DF <- function(crrLst = NULL, nmeVar = c(), mtxTri = TRUE, mtxSps = FALSE) {
+lst2DF <- function(crrLst = NULL, nmeVar = c(), mtxTri = TRUE, mtxSps = FALSE, valDgn = NA) {
     crrLst <- lapply(crrLst, function(M) { M <- as.matrix(M); if (mtxTri || mtxSps) M[upper.tri(M)] <- NA; as.data.frame(M) })
     if (is.null(names(crrLst)))
         names(crrLst) <- lstSbj(length(crrLst))
     if (!is.null(nmeVar))
         crrLst <- lapply(crrLst, function(M) { names(M) <- nmeVar; M })
+    if (!is.na(valDgn))
+        crrLst <- lapply(crrLst, function(M) { as.data.frame(setDgn(M, valDgn)) })
     if (mtxSps)
         crrLst <- lapply(crrLst, function(M) { M <- as.matrix(M); diag(M) <- NA; cbind(data.frame(Name = colnames(M)), as.data.frame(M))[-1, seq(nrow(M))] })
     crrLsI <- nrow(crrLst[[1]])
@@ -359,6 +361,12 @@ rplDsc <- function(crrDsc = NULL, rplDsc = "", rplVar = "") {
     if (nzchar(rplVar)) crrDsc[["variables"]]   <- gsub("_RPLVAR_", rplVar, crrDsc[["variables"]])
 
     crrDsc
+}
+
+setDgn <- function(crrDta = NULL, valDgn = 1) {
+    crrDta <- as.matrix(crrDta)
+    diag(crrDta) <- valDgn
+    crrDta
 }
 
 sumLst <- function(crrLst = NULL) as.numeric(smacof:::sumList(crrLst))
