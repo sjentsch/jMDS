@@ -204,7 +204,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 crrDta <- data.frame(x = as.numeric(crrMDS$dhat),
                                      y = as.numeric(crrMDS$confdist))
             } else if (is(crrMDS, "smacofID")) {
-                crrDta <- data.frame(x = as.numeric(smacof:::sumList(crrMDS$dhat)), y = as.numeric(smacof:::sumList(crrMDS$confdist)))
+                crrDta <- data.frame(x = sumLst(crrMDS$dhat), y = sumLst(crrMDS$confdist))
             }
             crrMax <- rndMnM(max(vapply(crrDta, max, numeric(1))))
             crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = x, y = y)) +
