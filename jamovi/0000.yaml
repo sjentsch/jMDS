@@ -12,9 +12,10 @@ type: R
 description: >-
   The module implements Multidimensional Scaling (MDS) based upon the `smacof`
   R-package. It permits to calculate and visualize MDS solutions for symmetric
-  matrices (e.g., correlations or distances), raw data (with individuals in rows
-  and variables in columns), or for individual differences (with symmetric or
-  sparse matrices, one for each participant, concatenated over rows).
+  matrices (e.g., distances, correlations or similarities), raw data (with
+  individuals in rows and variables in columns), or for individual differences
+  (with symmetric or sparse matrices, one for each participant, concatenated
+  over rows).
 analyses:
   - title: Multidimensional Scaling
     name: mds
