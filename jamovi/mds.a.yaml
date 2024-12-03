@@ -60,6 +60,20 @@ options:
         a string with a variable name pointing to a column containing the
         variable names if `data` is a sparse matrix
 
+  - name: bplSym
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: >
+        a vector of strings naming the variables in `data` to be used when
+        creating a biplot (cfgBPl == TRUE)
+
   - name: lvlSym
     type: List
     options:
@@ -161,6 +175,20 @@ options:
       R: > 
         a string with a variable containg the names for the data in the rows
         (e.g., a participant ID)
+
+  - name: bplRaw
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: >
+        a vector of strings naming the variables in `data` to be used when
+        creating a biplot (cfgBPl == TRUE)
 
   - name: lvlRaw
     type: List
@@ -282,6 +310,20 @@ options:
         a string with a variable name pointing to a column containing the
         IDs for the individuals that are in `data`
 
+  - name: bplInd
+    type: Variables
+#   takeFromDataIfMissing: true
+    suggested:
+      - ordinal
+      - continuous
+    permitted:
+      - numeric
+    rejectInf: false
+    description:
+      R: >
+        a vector of strings naming the variables in `data` to be used when
+        creating a biplot (cfgBPl == TRUE)
+
   - name: lvlInd
     type: List
     options:
@@ -372,6 +414,10 @@ options:
     type: Bool
     default: false
 
+  - name: cfgBPl
+    type: Bool
+    default: false
+
   - name: cfgInX
     type: Bool
     default: false
@@ -397,6 +443,10 @@ options:
     default: false
 
   - name: figWgh
+    type: Bool
+    default: false
+
+  - name: shwInf
     type: Bool
     default: false
 

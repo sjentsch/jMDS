@@ -37,6 +37,13 @@ children:
                     name: nmeSym
                     maxItemCount: 1
                     isTarget: true
+              - type: TargetLayoutBox
+                label: Variables For Biplot
+                children:
+                  - type: VariablesListBox
+                    name: bplSym
+                    isTarget: true
+                    height: small
 
           - type: LayoutBox
             margin: large
@@ -127,6 +134,13 @@ children:
                     maxItemCount: 1
                     isTarget: true
                     enable: (dirRaw:col)
+              - type: TargetLayoutBox
+                label: Variables For Biplot
+                children:
+                  - type: VariablesListBox
+                    name: bplRaw
+                    isTarget: true
+                    height: small
 
           - type: LayoutBox
             margin: large
@@ -229,6 +243,13 @@ children:
                     name: id_Ind
                     maxItemCount: 1
                     isTarget: true
+              - type: TargetLayoutBox
+                label: Variables For Biplot
+                children:
+                  - type: VariablesListBox
+                    name: bplInd
+                    isTarget: true
+                    height: small
 
           - type: LayoutBox
             margin: large
@@ -317,19 +338,34 @@ children:
             label: Configuration Plot
             style: inline
             margin: large
+            stretchFactor: 1
             children:
-              - type: CheckBox
-                name: cfgBbl
-                label: Bubble Plot
-                enable: (figCfg)
-              - type: CheckBox
-                name: cfgInX
-                label: Invert D1
-                enable: (figCfg)
-              - type: CheckBox
-                name: cfgInY
-                label: Invert D2
-                enable: (figCfg)
+              - type: LayoutBox
+                margin: large
+                style: inline
+                stretchFactor: 1
+                horizontalAlignment: right
+                children:
+                  - type: CheckBox
+                    name: cfgBbl
+                    label: Bubble Plot
+                    margin: large
+                    enable: (figCfg)
+                  - type: CheckBox
+                    name: cfgBPl
+                    label: Biplot
+                    margin: large
+                    enable: (figCfg)
+                  - type: CheckBox
+                    name: cfgInX
+                    label: Invert D1
+                    margin: large
+                    enable: (figCfg)
+                  - type: CheckBox
+                    name: cfgInY
+                    label: Invert D2
+                    margin: large
+                    enable: (figCfg)
           - name: figShp
             type: CheckBox
             label: Shepard Plot
@@ -346,6 +382,14 @@ children:
             name: figWgh
             label: Weights Diagram (for Individual Diff.)
             enable: (mdeMDS:Ind)
+      - type: LayoutBox
+        margin: large
+        style: inline
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: shwInf
+            label: Show Additional Information / Help
 
   - type: CollapseBox
     label: Save
