@@ -1,4 +1,4 @@
-# jMDS: A jamovi Module for Multidimensional Scaling
+# jMDS
 jMDS is a jamovi-module for multidimensional scaling. It is available from the
 [jamovi library](https://docs.jamovi.org/_pages/Install_modules.html).
 
