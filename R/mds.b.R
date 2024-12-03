@@ -199,7 +199,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     crrFig <- crrFig +
                                 ggplot2::geom_segment(
                                   ggplot2::aes(x = 0, y = 0, xend = crrBPl[1, varBPl], yend = crrBPl[2, varBPl]),
-                                  arrow = ggplot2::arrow(), color = theme$color[1])
+                                  arrow = ggplot2::arrow(length = ggplot2::unit(0.20, "cm"), type = "closed"),
+                                  size = 0.2, color = theme$color[1])
                     crrFig <- crrFig +
                                 ggplot2::geom_text(
                                   ggplot2::aes(x = crrBPl[1, varBPl], y = crrBPl[2, varBPl], label = varBPl),
