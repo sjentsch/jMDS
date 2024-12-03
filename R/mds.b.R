@@ -1,8 +1,15 @@
+#' @importFrom jmvcore .
 mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "mdsClass",
     inherit = mdsBase,
     #### Active bindings ----
     active = list(
+        getBPD = function() {
+            if (is.null(private$.crrBPD))
+                private$.crrBPD <- private$.clnBPD()
+
+            return(private$.crrBPD)
+        },
         getDta = function() {
             if (is.null(private$.crrDta))
                 private$.crrDta <- private$.clnDta()
@@ -11,13 +18,14 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         getMDS = function() {
             if (is.null(private$.crrMDS))
-                private$.crrMDS <- private$.getMDS()
+                private$.crrMDS <- private$.clcMDS()
 
             return(private$.crrMDS)
         }
     ),
     private = list(
         #### Member variables ----
+        .crrBPD = NULL,
         .crrDta = NULL,
         .crrMDS = NULL,
 
@@ -26,18 +34,25 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # initialize table and help / information
             private$.prpCfg()
             private$.prpOut()
-            private$.shwInf()
         },
         .run = function() {
             crrMDS <- self$getMDS
+            private$.shwInf()
             if (!is.null(crrMDS)) {
                 private$.fllCfg()
                 private$.fllOut()
                 for (nmeFig in c("figCfg", "figHst", "figRes", "figShp", "figStr", "figWgh")) self$results[[nmeFig]]$setState(crrMDS)
             }
-            private$.shwInf()
         },
-        # check (and if necessary convert) input data
+        # check and convert data for biplot
+        .clnBPD = function () {
+            crrMde <- self$options$mdeMDS
+            crrBPD <- self$readDataset()[, self$options[[paste0("bpl", crrMde)]], drop = FALSE]
+            if (is.null(self$getMDS) || any(dim(crrBPD) < 1)) return(NULL)
+            
+            return(as.data.frame(lapply(crrBPD, as.numeric)))
+        },
+        # check and convert input data
         .clnDta = function() {
             crrMde <- self$options$mdeMDS
             mdsVar <- self$options[[paste0("var", crrMde)]]
@@ -62,7 +77,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             return(crrDta)
         },
         # check (and if necessary - i.e., if variables, mode, etc. hav changed - regenerate) MDS estimate
-        .getMDS = function() {
+        .clcMDS = function() {
             crrDta <- self$getDta
             if (is.null(crrDta)) return(NULL)
 
@@ -104,11 +119,23 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             crrMDS
         },
-        # show general and additional information messages
+        # create model information and determine which information to show or to hide
         .shwInf = function() {
             crrMde <- self$options$mdeMDS
-            self$results$genInf$setContent(crtInf(self$getMDS, crrMde, self$options[[paste0("lvl", crrMde)]], self$options$dirRaw))
-            self$results$addInf$setContent(paste0("<p>", paste(getVar(paste0("add", crrMde)), collapse = "</p><p>"), "</p>"))
+            crrMDS <- self$getMDS
+            if (is.null(crrMDS)) {
+                self$results[[paste0("gen", crrMde)]]$setVisible(self$options$shwInf)
+                self$results$mdlInf$setVisible(FALSE)
+            } else {
+                self$results[[paste0("gen", crrMde)]]$setVisible(FALSE)
+                crrInf <- c(jmvcore::format(.("Estimated <strong>{m}</strong> (of type \"{t}\") with {o} objects in {i} iterations."),
+                                            m = crrMDS$model, t = getTyp(self$options[[paste0("lvl", crrMde)]]),
+                                            o = ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj), i = crrMDS$niter),
+                            jmvcore::format(.("Stress value: <strong>{v}</strong>"), v = round(crrMDS$stress, 3)),
+                            private$.dcdXfm())
+                self$results$mdlInf$setContent(paste(crrInf, collapse = "</p><p>"))
+                self$results$mdlInf$setVisible(TRUE)
+            }
         },
         # prepare and fill configuration table
         .prpCfg = function() {
@@ -124,9 +151,9 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (crrRow < crrDim + 1) return(invisible(NULL))
 
             crrTbl <- self$results$tblCfg
-            nmeClm <- c(sprintf("Dimension %d", seq(crrDim)), rep("SPP", self$options$clmSPP))
+            nmeClm <- c(jmvcore::format(.("Dimension {d}"), d = seq(crrDim)), rep(.("SPP"), self$options$clmSPP))
             nllRow <- stats::setNames(as.list(rep("", length(nmeClm))), nmeClm)
-            for (i in seq_along(nmeClm)) crrTbl$addColumn(name = gsub("Dimension ", "D", nmeClm[i]), title = nmeClm[i], type = 'number')
+            for (i in seq_along(nmeClm)) crrTbl$addColumn(name = ifelse(i <= crrDim, sprintf("D%d", i), "SPP"), title = nmeClm[i], type = 'number')
             for (i in seq(1, crrRow))    crrTbl$addRow(rowKey = i, values = nllRow)
         },
         .fllCfg = function() {
@@ -150,6 +177,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMDS <- image$state
             if (is.null(crrMDS)) return(FALSE)
 
+            crrDim <- self$options[[paste0("dim", self$options$mdeMDS)]]
+            nteDim <- if (crrDim > 2) jmvcore::format(.("(showing only the first 2 of {d} dimensions)"), d = crrDim) else NULL
             crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
             crrDta <- cbind(as.data.frame(crrMDS[[crrCfg]]), data.frame(pntSze = bblPnt(crrMDS[[nmeSPP(crrCfg)]], self$options$cfgBbl)))
             crrRng <- c(rndMnM(min(vapply(crrDta[, c("D1", "D2")], min, numeric(1))), 3),
@@ -158,9 +187,26 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       ggplot2::geom_point(size = crrDta$pntSze, colour = theme$color[2]) +
                       ggplot2::geom_text(size = 4, vjust = -0.8) +
                       ggplot2::coord_fixed() +
-                      ggplot2::labs(x = "Dimension 1", y = "Dimension 2")
+                      ggplot2::geom_vline(xintercept = 0, linewidth = 0.2, linetype = "dotted") +
+                      ggplot2::geom_hline(yintercept = 0, linewidth = 0.2, linetype = "dotted") + 
+                      ggplot2::labs(x = .("Dimension 1"), y = .("Dimension 2"), caption = nteDim)
             crrFig <- crrFig + if (self$options$cfgInX) ggplot2::scale_x_reverse(limits = rev(crrRng)) else ggplot2::scale_x_continuous(limits = crrRng)
             crrFig <- crrFig + if (self$options$cfgInY) ggplot2::scale_y_reverse(limits = rev(crrRng)) else ggplot2::scale_y_continuous(limits = crrRng)
+            if (self$options$cfgBPl && !is.null(self$getBPD)) {
+                crrBPl <- smacof::biplotmds(crrMDS, self$getBPD)[["coefficients"]]
+                crrBPl <- crrBPl/ceiling(max(crrBPl)/max(crrRng))
+                for (varBPl in colnames(crrBPl)) {
+                    crrFig <- crrFig +
+                                ggplot2::geom_segment(
+                                  ggplot2::aes(x = 0, y = 0, xend = crrBPl[1, varBPl], yend = crrBPl[2, varBPl]),
+                                  arrow = ggplot2::arrow(), color = theme$color[1])
+                    crrFig <- crrFig +
+                                ggplot2::geom_text(
+                                  ggplot2::aes(x = crrBPl[1, varBPl], y = crrBPl[2, varBPl], label = varBPl),
+                                  size = 4, color = theme$color[1],
+                                  nudge_y = sign(crrBPl[2, varBPl]) * ifelse(self$options$cfgInY, -1, 1) / 20)
+                }
+            }
 
             print(crrFig + ggtheme)
             TRUE
@@ -171,7 +217,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (is.null(crrMDS)) return(FALSE)
 
             if (is(crrMDS, "smacofR")) {
-                print(pltErr(sprintf("Histogram can not be produced\nfor %s.", crrMDS$model)))
+                print(pltErr(sprintf(.("Histogram can not be produced\nfor %s."), crrMDS$model)))
                 return(TRUE)
             }
 
@@ -184,7 +230,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = x)) +
                       ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(count / sum(count))), bins = 10,
                                               breaks = pretty(crrDta$x, 10), colour = theme$color[1], fill = theme$fill[2]) +
-                      ggplot2::labs(x = "Dissimiliarity", y = "Frequency") +
+                      ggplot2::labs(x = .("Dissimiliarity"), y = .("Frequency")) +
                       ggplot2::scale_y_continuous(expand = c(0, 0), labels = scales::percent)
             
             print(crrFig + ggtheme)
@@ -196,7 +242,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (is.null(crrMDS)) return(FALSE)
             
             if (is(crrMDS, "smacofR")) {
-                print(pltErr(sprintf("Residual plot can not be produced\nfor %s.", crrMDS$model)))
+                print(pltErr(sprintf(.("Residual plot can not be produced\nfor %s."), crrMDS$model)))
                 return(TRUE)
             }
 
@@ -211,7 +257,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       ggplot2::geom_point(size = 2, color = theme$color[2]) +
                       ggplot2::geom_smooth(formula = y ~ x, method = "lm", se = FALSE, color = theme$color[1]) +
                       ggplot2::coord_fixed() +
-                      ggplot2::labs(x = "Normalized Dissimiliarities (d-hats)", y = "Configuration Distances") +
+                      ggplot2::labs(x = .("Normalized Dissimiliarities (d-hats)"), y = .("Configuration Distances")) +
                       ggplot2::scale_x_continuous(expand = c(0, 0), limits = c(0, crrMax)) +
                       ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, crrMax))
             
@@ -237,7 +283,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       ggplot2::geom_point(size = 1, color = theme$color[2]) +
                       ggplot2::geom_step(ggplot2::aes(x = x, y = yf), color = theme$color[1], direction = "vh") +
                       ggplot2::annotate("text", x = max(crrDta$x) * 0.05, y = max(crrDta$y) * 0.95, label = crrFit, hjust = 0) + 
-                      ggplot2::labs(x = "Observed Dissimilarity", y = "Configuration Distances")
+                      ggplot2::labs(x = .("Observed Dissimilarity"), y = .("Configuration Distances"))
 
             print(crrFig + ggtheme)
             TRUE
@@ -253,7 +299,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       ggplot2::geom_segment(ggplot2::aes(x = x, xend = x, y = 0, yend = y), color = theme$color[1], linetype = "dotted") +
                       ggplot2::geom_point(size = 1, color = theme$color[2]) +
                       ggplot2::geom_text(size = 4, hjust = 0, vjust = -0.5, angle = 45) +
-                      ggplot2::labs(x = "Objects", y = "Stress Proportion (%)") +
+                      ggplot2::labs(x = .("Objects"), y = .("Stress Proportion (%)")) +
                       ggplot2::scale_x_continuous(breaks = seq_along(crrSPP), limits = c(1, max(crrDta$x) + 1), labels = NULL) +
                       ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, max(crrSPP) * 1.1))
 
@@ -265,7 +311,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (is.null(crrMDS)) return(FALSE)
 
             if (is(crrMDS, "smacofB") || is(crrMDS, "smacofR")) {
-                print(pltErr(sprintf("A weights diagram can not be produced\nfor %s.", crrMDS$model)))
+                print(pltErr(sprintf(.("A weights diagram can not be produced\nfor %s."), crrMDS$model)))
                 return(TRUE)
             }
 
@@ -274,7 +320,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       ggplot2::geom_segment(ggplot2::aes(x = 0, xend = D1, y = 0, yend = D2), arrow = ggplot2::arrow()) +
                       ggplot2::geom_text(ggplot2::aes(x = D1, y = D2, label = rownames(crrDta)), hjust = 0, nudge_x = 0.05) +
                       ggplot2::coord_fixed() +
-                      ggplot2::labs(x = "Dimension 1", y = "Dimension 2") +
+                      ggplot2::labs(x = .("Dimension 1"), y = .("Dimension 2")) +
                       ggplot2::scale_x_continuous(expand = c(0, 0), limits = c(0, rndMnM(max(crrDta)))) +
                       ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, rndMnM(max(crrDta))))
 
@@ -286,8 +332,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMde <- self$options$mdeMDS
             crrDim <- self$options[[paste0("dim", crrMde)]]
             if (self$options$ov_Cfg && length(self$options[[paste0("nme", crrMde)]]) == 0) {
-                self$results$ov_Cfg$set(seq(crrDim), sprintf("MDS_D%d", seq(crrDim)),
-                                        sprintf("MDS Configuration (Dimension %d)", seq(crrDim)), rep('continuous', crrDim))
+                self$results$ov_Cfg$set(seq(crrDim), sprintf(.("MDS_D%d"), seq(crrDim)),
+                                        sprintf(.("MDS Configuration (Dimension %d)"), seq(crrDim)), rep('continuous', crrDim))
             }
         },
         .fllOut = function() {
@@ -311,6 +357,81 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         self$results$ov_Cfg$setValues(index = i, outDta[, i])
                 }
             }
-        }
+        },
+        
+        # helper functions ------------------------------------------------------------------------
+		# decode transformations - NB: has to be in sync with the transformation operations defined in mds.a.yaml
+		.dcdXfm = function() {
+			crrMde <- self$options[["mdeMDS"]]
+			crrXfm <- self$options[[paste0("xfm", crrMde)]]
+			if        (crrMde %in% c("Sym", "Ind")) {
+				if        (crrXfm == "none") {
+				    .("Matrix contained already distances (i.e., no transformation was applied).")
+				} else if (crrXfm == "corr") {
+				    .("Before calculating the MDS, the correlations in the data matrix were transformed.")
+				} else if (crrXfm == "reverse") {
+				    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
+				} else if (crrXfm == "reciprocal") {
+				    .("Before calculating the MDS, the reciprocal of each valiues in the data matrix was calculated.")
+				} else if (crrXfm == "ranks") {
+				    .("Before calculating the MDS, the values in the data matrix were ranked.")
+				} else if (crrXfm == "exp") {
+				    .("Before calculating the MDS, the exponential of each valiues in the data matrix was calculated.")
+				} else if (crrXfm == "Gaussian") {
+				    .("Before calculating the MDS, a Gaussian transformation was applied to the values in the data matrix.")
+				} else if (crrXfm == "cooccurrence") {
+				    .("Before calculating the MDS, co-occurrences were calculated for the values in the data matrix.")
+				} else if (crrXfm == "gravity") {
+				    .("Before calculating the MDS, a gravity transformation was applied to the values in the data matrix.")
+				} else if (crrXfm == "confusion") {
+				    .("Before calculating the MDS, confusion proportions were calculated for the values in the data matrix.")
+				} else if (crrXfm == "transition") {
+				    .("Before calculating the MDS, transition frequencies were calculated for the values in the data matrix.")
+				} else if (crrXfm == "membership") {
+				    .("Before calculating the MDS, the membership was calculated for the values in the data matrix.")
+				} else if (crrXfm == "probability") {
+				    .("Before calculating the MDS, a probability transformation was applied to the values in the data matrix.")
+				} else if (is.integer(crrXfm)) {
+				    jmvcore::format(.("Before calculating the MDS, the values in the data matrix were subtracted from an integer value ({i})."),
+				      i = crrXfm)
+				} else {
+				    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
+				}
+			} else if (crrMde %in% c("Raw")) {
+				crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
+				dscR2S <- .(" (resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)")
+				if        (crrXfm == "none") {
+				    .("Matrix contained already distances (i.e., no transformation was applied).")
+				} else if (crrXfm == "reverse") {
+				    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
+				} else if (crrXfm == "rank") {
+				    .("Before calculating the MDS, the values in the data matrix were ranked.")
+				} else if (crrXfm %in% c("pearson", "kendall", "spearman")) {
+				    fmtStr <- .("Before calculating the MDS, {c}-correlations (over {d}) were calculated and then transformed to distances{i}.")
+				    jmvcore::format(fmtStr, c = gsub("\\b([A-Za-z])", "\\U\\1", crrXfm, perl = TRUE), d = crrDir, i = dscR2S)
+				} else if (grepl("minkowski_[1-4]", crrXfm)) {
+				    fmtStr <- .("Before calculating the MDS, {t} distances ({p}over {d}) were calculated{i}.")
+				    jmvcore::format(fmtStr,
+				                    t = gsub("minkowski", "Minkowski", gsub("minkowski_2", "Euclidean", gsub("minkowski_1", "Manhattan", crrXfm))),
+				                    p = ifelse(grepl("minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
+				                    d = crrDir, i = dscR2S)
+				} else if (grepl("z_minkowski_[1-4]", crrXfm)) {
+				    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then {t} distances ({p}over {d}) were calculated{i}.")
+				    jmvcore::format(fmtStr,
+				                    t = gsub("z_minkowski", "Minkowski", gsub("z_minkowski_2", "Euclidean", gsub("z_minkowski_1", "Manhattan", crrXfm))),
+				                    p = ifelse(grepl("z_minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
+				                    d = crrDir, i = dscR2S)
+				} else if (crrXfm == "binary") {
+				    fmtStr <- .("Before calculating the MDS, Jaccard distances (over {d}) were calculated{i}.")
+				    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
+				} else if (crrXfm == "z_binary") {
+				    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then Jaccard distances (over {d}) were calculated{i}.")
+				    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
+				} else {
+				    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
+				}
+			}
+		}
+
     )
 )
