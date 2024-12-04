@@ -193,19 +193,18 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrFig <- crrFig + if (self$options$cfgInX) ggplot2::scale_x_reverse(limits = rev(crrRng)) else ggplot2::scale_x_continuous(limits = crrRng)
             crrFig <- crrFig + if (self$options$cfgInY) ggplot2::scale_y_reverse(limits = rev(crrRng)) else ggplot2::scale_y_continuous(limits = crrRng)
             if (self$options$cfgBPl && !is.null(self$getBPD)) {
-                crrBPl <- smacof::biplotmds(crrMDS, self$getBPD)[["coefficients"]]
-                crrBPl <- crrBPl/ceiling(max(crrBPl)/max(crrRng))
-                for (varBPl in colnames(crrBPl)) {
+                crrBPl <- smacof::biplotmds(crrMDS, self$getBPD)
+                cffBPl <- crrBPl[["coefficients"]] / ceiling(max(crrBPl[["coefficients"]]) / max(abs(crrRng) / 1.2))
+                ndgY <- function(v) v + (sign(v) * ifelse(self$options$cfgInY, -1, 1) / 10)
+                for (varBPl in colnames(cffBPl)) {
                     crrFig <- crrFig +
-                                ggplot2::geom_segment(
-                                  ggplot2::aes(x = 0, y = 0, xend = crrBPl[1, varBPl], yend = crrBPl[2, varBPl]),
+                                ggplot2::annotate("segment", x = 0, y = 0, xend = cffBPl[1, varBPl], yend = cffBPl[2, varBPl],
                                   arrow = ggplot2::arrow(length = ggplot2::unit(0.20, "cm"), type = "closed"),
                                   size = 0.2, color = theme$color[1])
                     crrFig <- crrFig +
-                                ggplot2::geom_text(
-                                  ggplot2::aes(x = crrBPl[1, varBPl], y = crrBPl[2, varBPl], label = varBPl),
-                                  size = 4, color = theme$color[1],
-                                  nudge_y = sign(crrBPl[2, varBPl]) * ifelse(self$options$cfgInY, -1, 1) / 20)
+                                ggplot2::annotate("text", x = cffBPl[1, varBPl], y = ndgY(cffBPl[2, varBPl]),
+                                  label = sprintf("%s\n(R²: %.3f)", varBPl, crrBPl$R2vec[[varBPl]]),
+                                  size = 4, color = theme$color[1])
                 }
             }
 
