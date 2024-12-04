@@ -106,7 +106,7 @@ datasets:
     tags:
       - Symmetric
       - Distances
-      - Biplot      
+      - Biplot
   - name: Distances Between European Cities
     path: EuropeanDistances.omv
     description: Distances Between Some European Cities
