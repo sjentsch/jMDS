@@ -361,78 +361,78 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         
         # helper functions ------------------------------------------------------------------------
-		# decode transformations - NB: has to be in sync with the transformation operations defined in mds.a.yaml
-		.dcdXfm = function() {
-			crrMde <- self$options[["mdeMDS"]]
-			crrXfm <- self$options[[paste0("xfm", crrMde)]]
-			if        (crrMde %in% c("Sym", "Ind")) {
-				if        (crrXfm == "none") {
-				    .("Matrix contained already distances (i.e., no transformation was applied).")
-				} else if (crrXfm == "corr") {
-				    .("Before calculating the MDS, the correlations in the data matrix were transformed.")
-				} else if (crrXfm == "reverse") {
-				    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
-				} else if (crrXfm == "reciprocal") {
-				    .("Before calculating the MDS, the reciprocal of each valiues in the data matrix was calculated.")
-				} else if (crrXfm == "ranks") {
-				    .("Before calculating the MDS, the values in the data matrix were ranked.")
-				} else if (crrXfm == "exp") {
-				    .("Before calculating the MDS, the exponential of each valiues in the data matrix was calculated.")
-				} else if (crrXfm == "Gaussian") {
-				    .("Before calculating the MDS, a Gaussian transformation was applied to the values in the data matrix.")
-				} else if (crrXfm == "cooccurrence") {
-				    .("Before calculating the MDS, co-occurrences were calculated for the values in the data matrix.")
-				} else if (crrXfm == "gravity") {
-				    .("Before calculating the MDS, a gravity transformation was applied to the values in the data matrix.")
-				} else if (crrXfm == "confusion") {
-				    .("Before calculating the MDS, confusion proportions were calculated for the values in the data matrix.")
-				} else if (crrXfm == "transition") {
-				    .("Before calculating the MDS, transition frequencies were calculated for the values in the data matrix.")
-				} else if (crrXfm == "membership") {
-				    .("Before calculating the MDS, the membership was calculated for the values in the data matrix.")
-				} else if (crrXfm == "probability") {
-				    .("Before calculating the MDS, a probability transformation was applied to the values in the data matrix.")
-				} else if (is.integer(crrXfm)) {
-				    jmvcore::format(.("Before calculating the MDS, the values in the data matrix were subtracted from an integer value ({i})."),
-				      i = crrXfm)
-				} else {
-				    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
-				}
-			} else if (crrMde %in% c("Raw")) {
-				crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
-				dscR2S <- .(" (resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)")
-				if        (crrXfm == "none") {
-				    .("Matrix contained already distances (i.e., no transformation was applied).")
-				} else if (crrXfm == "reverse") {
-				    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
-				} else if (crrXfm == "rank") {
-				    .("Before calculating the MDS, the values in the data matrix were ranked.")
-				} else if (crrXfm %in% c("pearson", "kendall", "spearman")) {
-				    fmtStr <- .("Before calculating the MDS, {c}-correlations (over {d}) were calculated and then transformed to distances{i}.")
-				    jmvcore::format(fmtStr, c = gsub("\\b([A-Za-z])", "\\U\\1", crrXfm, perl = TRUE), d = crrDir, i = dscR2S)
-				} else if (grepl("minkowski_[1-4]", crrXfm)) {
-				    fmtStr <- .("Before calculating the MDS, {t} distances ({p}over {d}) were calculated{i}.")
-				    jmvcore::format(fmtStr,
-				                    t = gsub("minkowski", "Minkowski", gsub("minkowski_2", "Euclidean", gsub("minkowski_1", "Manhattan", crrXfm))),
-				                    p = ifelse(grepl("minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
-				                    d = crrDir, i = dscR2S)
-				} else if (grepl("z_minkowski_[1-4]", crrXfm)) {
-				    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then {t} distances ({p}over {d}) were calculated{i}.")
-				    jmvcore::format(fmtStr,
-				                    t = gsub("z_minkowski", "Minkowski", gsub("z_minkowski_2", "Euclidean", gsub("z_minkowski_1", "Manhattan", crrXfm))),
-				                    p = ifelse(grepl("z_minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
-				                    d = crrDir, i = dscR2S)
-				} else if (crrXfm == "binary") {
-				    fmtStr <- .("Before calculating the MDS, Jaccard distances (over {d}) were calculated{i}.")
-				    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
-				} else if (crrXfm == "z_binary") {
-				    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then Jaccard distances (over {d}) were calculated{i}.")
-				    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
-				} else {
-				    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
-				}
-			}
-		}
+        # decode transformations - NB: has to be in sync with the transformation operations defined in mds.a.yaml
+        .dcdXfm = function() {
+            crrMde <- self$options[["mdeMDS"]]
+            crrXfm <- self$options[[paste0("xfm", crrMde)]]
+            if        (crrMde %in% c("Sym", "Ind")) {
+                if        (crrXfm == "none") {
+                    .("Matrix contained already distances (i.e., no transformation was applied).")
+                } else if (crrXfm == "corr") {
+                    .("Before calculating the MDS, the correlations in the data matrix were transformed.")
+                } else if (crrXfm == "reverse") {
+                    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
+                } else if (crrXfm == "reciprocal") {
+                    .("Before calculating the MDS, the reciprocal of each valiues in the data matrix was calculated.")
+                } else if (crrXfm == "ranks") {
+                    .("Before calculating the MDS, the values in the data matrix were ranked.")
+                } else if (crrXfm == "exp") {
+                    .("Before calculating the MDS, the exponential of each valiues in the data matrix was calculated.")
+                } else if (crrXfm == "Gaussian") {
+                    .("Before calculating the MDS, a Gaussian transformation was applied to the values in the data matrix.")
+                } else if (crrXfm == "cooccurrence") {
+                    .("Before calculating the MDS, co-occurrences were calculated for the values in the data matrix.")
+                } else if (crrXfm == "gravity") {
+                    .("Before calculating the MDS, a gravity transformation was applied to the values in the data matrix.")
+                } else if (crrXfm == "confusion") {
+                    .("Before calculating the MDS, confusion proportions were calculated for the values in the data matrix.")
+                } else if (crrXfm == "transition") {
+                    .("Before calculating the MDS, transition frequencies were calculated for the values in the data matrix.")
+                } else if (crrXfm == "membership") {
+                    .("Before calculating the MDS, the membership was calculated for the values in the data matrix.")
+                } else if (crrXfm == "probability") {
+                    .("Before calculating the MDS, a probability transformation was applied to the values in the data matrix.")
+                } else if (is.integer(crrXfm)) {
+                        jmvcore::format(.("Before calculating the MDS, the values in the data matrix were subtracted from an integer value ({i})."),
+                      i = crrXfm)
+                } else {
+                    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
+                }
+            } else if (crrMde %in% c("Raw")) {
+                crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
+                dscR2S <- .(" (resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)")
+                if        (crrXfm == "none") {
+                    .("Matrix contained already distances (i.e., no transformation was applied).")
+                } else if (crrXfm == "reverse") {
+                    .("Before calculating the MDS, the values in the data matrix were subtracted from the range.")
+                } else if (crrXfm == "rank") {
+                    .("Before calculating the MDS, the values in the data matrix were ranked.")
+                } else if (crrXfm %in% c("pearson", "kendall", "spearman")) {
+                    fmtStr <- .("Before calculating the MDS, {c}-correlations (over {d}) were calculated and then transformed to distances{i}.")
+                    jmvcore::format(fmtStr, c = gsub("\\b([A-Za-z])", "\\U\\1", crrXfm, perl = TRUE), d = crrDir, i = dscR2S)
+                } else if (grepl("minkowski_[1-4]", crrXfm)) {
+                    fmtStr <- .("Before calculating the MDS, {t} distances ({p}over {d}) were calculated{i}.")
+                    jmvcore::format(fmtStr,
+                                    t = gsub("minkowski", "Minkowski", gsub("minkowski_2", "Euclidean", gsub("minkowski_1", "Manhattan", crrXfm))),
+                                    p = ifelse(grepl("minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
+                                    d = crrDir, i = dscR2S)
+                } else if (grepl("z_minkowski_[1-4]", crrXfm)) {
+                    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then {t} distances ({p}over {d}) were calculated{i}.")
+                    jmvcore::format(fmtStr,
+                                    t = gsub("z_minkowski", "Minkowski", gsub("z_minkowski_2", "Euclidean", gsub("z_minkowski_1", "Manhattan", crrXfm))),
+                                    p = ifelse(grepl("z_minkowski_[3-4]", crrXfm), paste("power = ", gsub("minkowski_", "", crrXfm), "; "), ""),
+                                    d = crrDir, i = dscR2S)
+                } else if (crrXfm == "binary") {
+                    fmtStr <- .("Before calculating the MDS, Jaccard distances (over {d}) were calculated{i}.")
+                    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
+                } else if (crrXfm == "z_binary") {
+                    fmtStr <- .("Before calculating the MDS, the data were first z-transformed and then Jaccard distances (over {d}) were calculated{i}.")
+                    jmvcore::format(fmtStr, d = crrDir, i = dscR2S)
+                } else {
+                    jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
+                }
+            }
+        }
 
     )
 )
