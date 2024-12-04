@@ -78,28 +78,35 @@ datasets:
       - Distances
   - name: Color Similarities (Symmetric)
     path: Ekman_SIML_SYMM.omv
-    description: Color Similarities (Ekman, 1964)
+    description: Color similarities (Ekman, 1954)
     tags:
       - Symmetric
       - Similarities
   - name: Color Similarities (Sparse)
     path: Ekman_SIML_SPRS.omv
-    description: Color Similarities (Ekman, 1964)
+    description: Color similarities (Ekman, 1954)
     tags:
       - Symmetric
       - Similarities
   - name: Color Distances (Symmetric)
     path: Ekman_DIST_SYMM.omv
-    description: Color Distances (Ekman, 1964)
+    description: Color distances (Ekman, 1954)
     tags:
       - Symmetric
       - Distances
   - name: Color Distances (Sparse)
     path: Ekman_DIST_SPRS.omv
-    description: Color Distances (Ekman, 1964)
+    description: Color distances (Ekman, 1954)
     tags:
       - Symmetric
       - Distances
+  - name: Color Distances With Biplot Variables
+    path: Ekman_BIPL.omv
+    description: Color distances (Ekman, 1954) and variables for biplot
+    tags:
+      - Symmetric
+      - Distances
+      - Biplot      
   - name: Distances Between European Cities
     path: EuropeanDistances.omv
     description: Distances Between Some European Cities
@@ -201,6 +208,13 @@ datasets:
     tags:
       - Symmetric
       - Distances
+  - name: Distances Between Nations With Biplot Variable
+    path: Wish_DIST.omv
+    description: Distances between nations (Wish, 1971) and variable for biplot
+    tags:
+      - Symmetric
+      - Distances
+      - Biplot
   - name: Working Values (East vs. West Germany)
     path: WorkingValues_EastWestGermany.omv
     description: Differences in Working Values (East vs. West Germany; 1991)
