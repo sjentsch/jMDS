@@ -273,9 +273,10 @@ rowNme <- function(crrDta = NULL, valNme = c()) {
     crrDta
 }
 
-rplDsc <- function(crrDsc = NULL, rplDsc = "", rplVar = "") {
-    if (nzchar(rplDsc)) crrDsc[["description"]] <- gsub("_RPLDSC_", rplDsc, crrDsc[["description"]])
-    if (nzchar(rplVar)) crrDsc[["variables"]]   <- gsub("_RPLVAR_", rplVar, crrDsc[["variables"]])
+rplDsc <- function(crrDsc = NULL, rplDsc = "", rplVar = "", bplVar = NULL) {
+    if (nzchar(rplDsc))   crrDsc[["description"]] <- gsub("_RPLDSC_", rplDsc, crrDsc[["description"]])
+    if (nzchar(rplVar))   crrDsc[["variables"]]   <- gsub("_RPLVAR_", rplVar, crrDsc[["variables"]])
+    if (!is.null(bplVar)) crrDsc[["variables"]]   <- c(bplVar,                crrDsc[["variables"]])
 
     crrDsc
 }
