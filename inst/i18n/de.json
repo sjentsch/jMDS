@@ -1,0 +1,601 @@
+{
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "plural_forms": "nplurals=2; plural=(n != 1)",
+                "lang": "de"
+            },
+            " (resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)": [
+                ""
+            ],
+            "(showing only the first 2 of {d} dimensions)": [
+                ""
+            ],
+            "# TRIAL\n# TRIAL\n# TRIAL": [
+                ""
+            ],
+            "`'col'` (default) or `'row'`, are the distances analyzed between columns or rows": [
+                ""
+            ],
+            "`'none'` (default), `'corr'`, `'reverse'`, `'reciprocal'`, `'ranks'`, `'exp'`, `'Gaussian'`, `'cooccurrence'`, `'gravity'`, `'confusion'`, `'transition'`, `'membership'`, `'probability'`, or an integer value if `'none'`, the input data are already dissimilarities / distances; otherwise, which method to use for converting the original (similarity) matrix into a dissimiliarity / distance matrix that is then submitted to the MDS calculation": [
+                ""
+            ],
+            "`'ordinal_primary'`, `'ordinal_secondary'` (default), `'ordinal_tertiary'` or `'metric'`, the measurement level of the variables of interest (and how ranks are assigned when the level is ordinal)": [
+                ""
+            ],
+            "<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required. When comparing individual differences, each individual is described by one matrix of these matrix types. The matrices are concatenated over rows. That is, if V is the number of variables assigned to “Variables for MDS”, the first V rows are the data for the first individual, the second V rows for the second individual, and so on.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For “ordinal”, there are different choices how to deal with tied ranks: “primary” - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); “secondary” - keep ties tied, i.e., distances with the same value are assigned the same rank; or “tertiary” - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option “Already Distances (no transform.)” in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (☰) - Open - Data Library, and then chosing the folder “Multidimensional Scaling (MDS) for jamovi”. Each dataset has tags, describing with which mode it should be used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the data are already “Distances” or need to be transformed (“Correlations”, “Similarities”).</p>": [
+                ""
+            ],
+            "<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For “ordinal”, there are different choices how to deal with tied ranks: “primary” - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); “secondary” - keep ties tied, i.e., distances with the same value are assigned the same rank; or “tertiary” - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option “Already Distances (no transform.)” in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (☰) - Open - Data Library, and then chosing the folder “Multidimensional Scaling (MDS) for jamovi”. Each dataset has tags, describing with which mode it should be used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the data are already “Distances” or need to be transformed (“Correlations”, “Similarities”).</p>": [
+                ""
+            ],
+            "<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: Data matrices have the shape that is usual for most / all other analyses included in jamovi, namely individuals (or other units of observation) as rows and variables as columns.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For “ordinal”, there are different choices how to deal with tied ranks: “primary” - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); “secondary” - keep ties tied, i.e., distances with the same value are assigned the same rank; or “tertiary” - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: Typically, raw data are not already distances (i.e., ranks within each row, if columns are to be compared). If they are distamces, choose “Already Distances (no transform.)”, otherwise choose one of the following tranformations: If the data are preferences or ratings, they may be transformed by beeing reversed or ranked. When using one of these (or no) tranformation, the shape (rows and columns) of the original data is preserved and <code>smacofRect</code> is used for calculating the MDS solution. Alternatively, the transformations can be either correlating the data or calculating distances from the raw data. If correlations are calculated (over rows or columns, as indicated; and using either parametric - Pearson - or non-parametric - Kendall or Spearman - correlations), these correlations are then converted into distances. If distance measures are calculated (over rows or columns, as indicated), these can be Euclidian, Manhattan, Minkowski or Jaccard distances, and one can further determine whether these distance measures shall be calculated on the original or z-standardized data. Using correlations or distance measures as transformations changes the shape of the data matrix into a symmetric matrix (either of the size rows x rows or columns x columns), which is then analyzed using <code>smacofSym</code>.</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (☰) - Open - Data Library, and then chosing the folder “Multidimensional Scaling (MDS) for jamovi”. Each dataset has tags, describing with which mode it should be used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the data are already “Distances” or need to be transformed (“Correlations”, “Similarities”).</p>": [
+                ""
+            ],
+            "<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (“Mode”) in the analysis UI to determine the type of input data.\")</p> <p>The matrices that serve as input for this form of MDS are matrices (one per individual) that are concatenated (over rows). These individual matrices can have one of the following formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu “Transform Similarities to Distances”. See Additional Information at the end of the Results output for more detailed explanations.</p>": [
+                ""
+            ],
+            "<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (“Mode”) in the analysis UI to determine the type of input data.\")</p> <p>The symmetric matrices that serve as input for this form of MDS, can have several formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu “Transform Similarities to Distances”. See Additional Information at the end of the Results output for more detailed explanations.</p>": [
+                ""
+            ],
+            "<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (“Mode”) in the analysis UI to determine the type of input data.\")</p> <p>When conducting a MDS with raw data, one first needs to decide what should be compared, rows (i.e., persons / units of observation) or columns (i.e., variables). This can be set with the radio buttons underneath the variable boxes in the analysis UI. Please note that rows in the original data containing NAs are automatically excluded. Typically, the data are not already distances. That is, they need to be converted using the drop-down-menu “Transform Similarities to Distances”. Depending on which transformation is chosen, the data are either analyzed using <code>smacofRect</code> (applies when using the transformations “Reverse” or “Rank”), or using <code>smacofSym</code> (applies when using transformations involving correlations or distances). See Additional Information at the end of the Results output for more detailed explanations.</p>": [
+                ""
+            ],
+            "a diagram showing the fitted configurations": [
+                ""
+            ],
+            "a string with a variable containg the names for the data in the rows (e.g., a participant ID)": [
+                ""
+            ],
+            "a string with a variable name pointing to a column containing the IDs for the individuals that are in `data`": [
+                ""
+            ],
+            "a string with a variable name pointing to a column containing the variable names if `data` is a sparse matrix": [
+                ""
+            ],
+            "a string with a variable name pointing to a column containing the variable names if `data` is composed of sparse matrices": [
+                ""
+            ],
+            "a table containing the fitted configurations": [
+                ""
+            ],
+            "a vector of strings naming the variables in `data` to be used when creating a biplot (cfgBPl == TRUE)": [
+                ""
+            ],
+            "a vector of strings naming the variables of interest in `data`": [
+                ""
+            ],
+            "A weights diagram can not be produced\nfor %s.": [
+                ""
+            ],
+            "Add Stress per Point to Configuration Table": [
+                ""
+            ],
+            "Already Distances (no transform.)": [
+                ""
+            ],
+            "an integer (default: 0) from which the original values are subtracted": [
+                ""
+            ],
+            "an integer (default: 2), number of MDS dimensions": [
+                ""
+            ],
+            "Assesment according to Schwartz' theory of basic human values": [
+                ""
+            ],
+            "Assign Ranks": [
+                ""
+            ],
+            "Before calculating the MDS, {c}-correlations (over {d}) were calculated and then transformed to distances{i}.": [
+                ""
+            ],
+            "Before calculating the MDS, {t} distances ({p}over {d}) were calculated{i}.": [
+                ""
+            ],
+            "Before calculating the MDS, a Gaussian transformation was applied to the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, a gravity transformation was applied to the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, a probability transformation was applied to the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, co-occurrences were calculated for the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, confusion proportions were calculated for the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, Jaccard distances (over {d}) were calculated{i}.": [
+                ""
+            ],
+            "Before calculating the MDS, the correlations in the data matrix were transformed.": [
+                ""
+            ],
+            "Before calculating the MDS, the data were first z-transformed and then {t} distances ({p}over {d}) were calculated{i}.": [
+                ""
+            ],
+            "Before calculating the MDS, the data were first z-transformed and then Jaccard distances (over {d}) were calculated{i}.": [
+                ""
+            ],
+            "Before calculating the MDS, the exponential of each valiues in the data matrix was calculated.": [
+                ""
+            ],
+            "Before calculating the MDS, the membership was calculated for the values in the data matrix.": [
+                ""
+            ],
+            "Before calculating the MDS, the reciprocal of each valiues in the data matrix was calculated.": [
+                ""
+            ],
+            "Before calculating the MDS, the values in the data matrix were ranked.": [
+                ""
+            ],
+            "Before calculating the MDS, the values in the data matrix were subtracted from an integer value ({i}).": [
+                ""
+            ],
+            "Before calculating the MDS, the values in the data matrix were subtracted from the range.": [
+                ""
+            ],
+            "Before calculating the MDS, transition frequencies were calculated for the values in the data matrix.": [
+                ""
+            ],
+            "Biplot": [
+                ""
+            ],
+            "Breakfast": [
+                ""
+            ],
+            "Bubble Plot": [
+                ""
+            ],
+            "Calculate Reciprocal": [
+                ""
+            ],
+            "Cars (Lower Triang.)": [
+                ""
+            ],
+            "Cars (Sparse, Lower)": [
+                ""
+            ],
+            "Cars (Sparse, Upper)": [
+                ""
+            ],
+            "Cars (Symmetric)": [
+                ""
+            ],
+            "Cars (Upper Triang.)": [
+                ""
+            ],
+            "Co-occurrences": [
+                ""
+            ],
+            "Color Distances (Ekman, 1964)": [
+                ""
+            ],
+            "Color Distances (Helm, 1964)": [
+                ""
+            ],
+            "Color Distances (Sparse)": [
+                ""
+            ],
+            "Color Distances (Symmetric)": [
+                ""
+            ],
+            "Color Similarities (Ekman, 1964)": [
+                ""
+            ],
+            "Color Similarities (Sparse)": [
+                ""
+            ],
+            "Color Similarities (Symmetric)": [
+                ""
+            ],
+            "Color similarity ratings from Helm (1964) transformed into distances": [
+                ""
+            ],
+            "Columns": [
+                ""
+            ],
+            "Configuration Distances": [
+                ""
+            ],
+            "Configuration Plot": [
+                ""
+            ],
+            "Configuration Table": [
+                ""
+            ],
+            "Configurations": [
+                ""
+            ],
+            "Configurations (When “Symmetric” or “Individual Diff.”; Data Must Not Be Sparse)": [
+                ""
+            ],
+            "Confusion Proportions": [
+                ""
+            ],
+            "Correlation (Kendall) to Distance": [
+                ""
+            ],
+            "Correlation (Pearson) to Distance": [
+                ""
+            ],
+            "Correlation (Spearman) to Distance": [
+                ""
+            ],
+            "Correlations between subtests of the Kennedy Institute Phonics Test (KIPT)": [
+                ""
+            ],
+            "Country Demographics": [
+                ""
+            ],
+            "Crime Rates (Correlations)": [
+                ""
+            ],
+            "Crime Rates (Distances)": [
+                ""
+            ],
+            "Differences in Working Values (East vs. West Germany; 1991)": [
+                ""
+            ],
+            "Differences wine-ratings between judges": [
+                ""
+            ],
+            "Dimension {d}": [
+                ""
+            ],
+            "Dimension 1": [
+                ""
+            ],
+            "Dimension 2": [
+                ""
+            ],
+            "Dissimiliarity": [
+                ""
+            ],
+            "Distances (transf. from similarity) between nations (Wish, 1971)": [
+                ""
+            ],
+            "Distances Between European Cities": [
+                ""
+            ],
+            "Distances between Facial Expressions": [
+                ""
+            ],
+            "Distances Between French Cities": [
+                ""
+            ],
+            "Distances Between Kinship Terms": [
+                ""
+            ],
+            "Distances between management performance ratings for different raters": [
+                ""
+            ],
+            "Distances Between Nations": [
+                ""
+            ],
+            "Distances Between Some European Cities": [
+                ""
+            ],
+            "Distances Between Some French Cities": [
+                ""
+            ],
+            "Distances Between Stars in Different Zodiac Signs": [
+                ""
+            ],
+            "Distances between subtests of the Kennedy Institute Phonics Test (KIPT)": [
+                ""
+            ],
+            "Distances the 10 Brightest Stars in Different Zodiac Signs": [
+                ""
+            ],
+            "Estimated <strong>{m}</strong> (of type \\": [
+                ""
+            ],
+            "Euclidean Distance": [
+                ""
+            ],
+            "Euclidean Distance (z-std.)": [
+                ""
+            ],
+            "Example for how to format data (lower triang)": [
+                ""
+            ],
+            "Example for how to format data (sparse, lower)": [
+                ""
+            ],
+            "Example for how to format data (sparse, upper)": [
+                ""
+            ],
+            "Example for how to format data (symmetric)": [
+                ""
+            ],
+            "Example for how to format data (upper triang.)": [
+                ""
+            ],
+            "Exponential": [
+                ""
+            ],
+            "Frequency": [
+                ""
+            ],
+            "Gaussian": [
+                ""
+            ],
+            "Gravity": [
+                ""
+            ],
+            "Histogram": [
+                ""
+            ],
+            "Histogram can not be produced\nfor %s.": [
+                ""
+            ],
+            "Histogram of the Dissimilarities": [
+                ""
+            ],
+            "How dissimilar 13 facial expressions were rated (Abelson & Sermat, 1962)": [
+                ""
+            ],
+            "How ofter were kinship terms not grouped together?": [
+                ""
+            ],
+            "Individual Diff.": [
+                ""
+            ],
+            "Invalid transformation {xfm}.": [
+                ""
+            ],
+            "Invert D1": [
+                ""
+            ],
+            "Invert D2": [
+                ""
+            ],
+            "Jaccard Distance": [
+                ""
+            ],
+            "Jaccard Distance (z-std. Data)": [
+                ""
+            ],
+            "jMDS": [
+                ""
+            ],
+            "Management Performance (Correlations)": [
+                ""
+            ],
+            "Management Performance (Distances)": [
+                ""
+            ],
+            "Manhattan Distance": [
+                ""
+            ],
+            "Manhattan Distance (z-std. data)": [
+                ""
+            ],
+            "Margarine (for Ind. Diff, Sparse)": [
+                ""
+            ],
+            "Margarine (for Ind. Diff, Triang.)": [
+                ""
+            ],
+            "Margarine (Sparse Matrices)": [
+                ""
+            ],
+            "Margarine (Symmetric Matrices)": [
+                ""
+            ],
+            "Margarine (Triang. Matrices)": [
+                ""
+            ],
+            "Margarine ratings from different raters": [
+                ""
+            ],
+            "Matrix contained already distances (i.e., no transformation was applied).": [
+                ""
+            ],
+            "MDS Configuration (Dimension %d)": [
+                ""
+            ],
+            "MDS_D%d": [
+                ""
+            ],
+            "Membership": [
+                ""
+            ],
+            "Metric": [
+                ""
+            ],
+            "Minkowski Distance (power = 3, z-std.)": [
+                ""
+            ],
+            "Minkowski Distance (power = 3)": [
+                ""
+            ],
+            "Minkowski Distance (power = 4, z-std.)": [
+                ""
+            ],
+            "Minkowski Distance (power = 4)": [
+                ""
+            ],
+            "Mode": [
+                ""
+            ],
+            "Multidimensional Scaling": [
+                ""
+            ],
+            "Multidimensional Scaling (MDS) for jamovi": [
+                ""
+            ],
+            "Normalized Dissimiliarities (d-hats)": [
+                ""
+            ],
+            "Number of MDS Dimensions:": [
+                ""
+            ],
+            "Objects": [
+                ""
+            ],
+            "Observed Dissimilarity": [
+                ""
+            ],
+            "Ordinal (Prim. Ties)": [
+                ""
+            ],
+            "Ordinal (Second. Ties)": [
+                ""
+            ],
+            "Ordinal (Tertiary Ties)": [
+                ""
+            ],
+            "Outputs": [
+                ""
+            ],
+            "Perform Multidimensional Scaling": [
+                ""
+            ],
+            "Phonic / Reading Skills (Subtest Correl.)": [
+                ""
+            ],
+            "Phonic / Reading Skills (Subtest Distances)": [
+                ""
+            ],
+            "Portrait Values Questionnaire": [
+                ""
+            ],
+            "Probabilities": [
+                ""
+            ],
+            "PTSD Symptoms After the Wenchuan Earthquake": [
+                ""
+            ],
+            "Rank (for preferences or ratings)": [
+                ""
+            ],
+            "Rank Several Breakfast Items (Raw Data)": [
+                ""
+            ],
+            "Rating of Different Wines": [
+                ""
+            ],
+            "Raw Data": [
+                ""
+            ],
+            "Residual Diagram": [
+                ""
+            ],
+            "Residual Plot": [
+                ""
+            ],
+            "Residual plot can not be produced\nfor %s.": [
+                ""
+            ],
+            "Reverse (for preferences or ratings)": [
+                ""
+            ],
+            "Rows": [
+                ""
+            ],
+            "Save": [
+                ""
+            ],
+            "Several Country Demographics (e.g, GDP)": [
+                ""
+            ],
+            "Shepard Diagram": [
+                ""
+            ],
+            "Shepard Plot": [
+                ""
+            ],
+            "Show Additional Information / Help": [
+                ""
+            ],
+            "Similarity Among Nations": [
+                ""
+            ],
+            "Similarity among nations (Wish, 1971)": [
+                ""
+            ],
+            "Similarity in management performance ratings between raters": [
+                ""
+            ],
+            "SPP": [
+                ""
+            ],
+            "Stress Diagram": [
+                ""
+            ],
+            "Stress Plot": [
+                ""
+            ],
+            "Stress Proportion (%)": [
+                ""
+            ],
+            "Stress value: <strong>{v}</strong>": [
+                ""
+            ],
+            "Subtract from integer value": [
+                ""
+            ],
+            "Subtract from Maximum Value": [
+                ""
+            ],
+            "Symmetric": [
+                ""
+            ],
+            "TBA": [
+                ""
+            ],
+            "the data as a data frame": [
+                ""
+            ],
+            "The module implements Multidimensional Scaling (MDS) based upon the `smacof` R-package. It permits to calculate and visualize MDS solutions for symmetric matrices (e.g., distances, correlations or similarities), raw data (with individuals in rows and variables in columns), or for individual differences (with symmetric or sparse matrices, one for each participant, concatenated over rows).": [
+                ""
+            ],
+            "Transform Correlations": [
+                ""
+            ],
+            "Transform Similarities to Distances": [
+                ""
+            ],
+            "Transition Frequencies": [
+                ""
+            ],
+            "U.S. Crime Rates": [
+                ""
+            ],
+            "Variable Names (for Sparse Matrices)": [
+                ""
+            ],
+            "Variable With IDs of the Individuals": [
+                ""
+            ],
+            "Variable With Row Names (Optional)": [
+                ""
+            ],
+            "Variables For Biplot": [
+                ""
+            ],
+            "Variables for MDS": [
+                ""
+            ],
+            "Weights Diagram": [
+                ""
+            ],
+            "Weights Diagram (for Individual Diff.)": [
+                ""
+            ],
+            "Wenchuan Eathquake": [
+                ""
+            ],
+            "Working Values (East vs. West Germany)": [
+                ""
+            ]
+        }
+    },
+    "code": "de"
+}
