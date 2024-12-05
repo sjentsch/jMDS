@@ -12,10 +12,10 @@ type: R
 description: >-
   The module implements Multidimensional Scaling (MDS) based upon the `smacof`
   R-package. It permits to calculate and visualize MDS solutions for symmetric
-  matrices (e.g., distances, correlations or similarities), raw data (with
-  individuals in rows and variables in columns), or for individual differences
-  (with symmetric or sparse matrices, one for each participant, concatenated
-  over rows).
+  matrices (e.g., distances, correlations or similarities), rectangular matrices
+  (with individuals in rows and variables in columns), or for individual
+  differences (with symmetric or sparse matrices, one for each participant,
+  concatenated over rows).
 analyses:
   - title: Multidimensional Scaling
     name: mds
@@ -26,9 +26,9 @@ analyses:
 datasets:
   - name: Breakfast
     path: Breakfast.omv
-    description: Rank Several Breakfast Items (Raw Data)
+    description: Rank Several Breakfast Items
     tags:
-      - Raw Data
+      - Rectangular
   - name: Cars (Symmetric)
     path: Cars4MDS_SYMM.omv
     description: Example for how to format data (symmetric)
@@ -63,7 +63,7 @@ datasets:
     path: Demography_2022.omv
     description: Several Country Demographics (e.g, GDP)
     tags:
-      - Raw Data
+      - Rectangular
   - name: Crime Rates (Correlations)
     path: Crimes_CORR_SPRS.omv
     description: U.S. Crime Rates
@@ -183,7 +183,7 @@ datasets:
     path: PortraitValuesQuestionnaire.omv
     description: Assesment according to Schwartz' theory of basic human values
     tags:
-      - Raw Data
+      - Rectangular
   - name: Wenchuan Eathquake
     path: Wenchuan.omv
     description: PTSD Symptoms After the Wenchuan Earthquake
@@ -209,7 +209,7 @@ datasets:
       - Symmetric
       - Distances
   - name: Distances Between Nations With Biplot Variable
-    path: Wish_DIST.omv
+    path: Wish_BIPL.omv
     description: Distances between nations (Wish, 1971) and variable for biplot
     tags:
       - Symmetric
