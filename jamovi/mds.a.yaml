@@ -28,8 +28,8 @@ options:
     options:
     - name: Sym
       title: Symmetric
-    - name: Raw
-      title: Raw Data
+    - name: Rct
+      title: Rectangular
     - name: Ind
       title: Individual Diff.
     default: Sym
@@ -152,7 +152,7 @@ options:
 
 # =============================================================================
 
-  - name: varRaw
+  - name: varRct
     type: Variables
 #   takeFromDataIfMissing: true
     suggested:
@@ -164,7 +164,7 @@ options:
     description:
       R: a vector of strings naming the variables of interest in `data`
 
-  - name: nmeRaw
+  - name: nmeRct
     type: Variable
     suggested:
       - nominal
@@ -176,7 +176,7 @@ options:
         a string with a variable containg the names for the data in the rows
         (e.g., a participant ID)
 
-  - name: bplRaw
+  - name: bplRct
     type: Variables
 #   takeFromDataIfMissing: true
     suggested:
@@ -190,7 +190,7 @@ options:
         a vector of strings naming the variables in `data` to be used when
         creating a biplot (cfgBPl == TRUE)
 
-  - name: lvlRaw
+  - name: lvlRct
     type: List
     options:
       - title: Metric
@@ -208,7 +208,7 @@ options:
         or `'metric'`, the measurement level of the variables of interest (and
         how ranks are assigned when the level is ordinal) 
 
-  - name: dimRaw
+  - name: dimRct
     type: Integer
     min: 2
     max: 10
@@ -217,7 +217,7 @@ options:
       R: >
         an integer (default: 2), number of MDS dimensions
 
-  - name: dirRaw
+  - name: dirRct
     type: List
     options:
       - title: Columns
@@ -230,7 +230,7 @@ options:
         `'col'` (default) or `'row'`, are the distances analyzed between
         columns or rows
 
-  - name: xfmRaw
+  - name: xfmRct
     type: List
     options:
       - title: Already Distances (no transform.)
@@ -425,6 +425,10 @@ options:
   - name: cfgInY
     type: Bool
     default: false
+
+  - name: cfgB4R
+    type: Bool
+    default: true
 
   - name: figShp
     type: Bool

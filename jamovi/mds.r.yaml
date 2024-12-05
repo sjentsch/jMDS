@@ -12,11 +12,12 @@ items:
     content: >-
       <p>When performing Multidimensional Scaling, you first need to decide
       what type of data you have. jMDS permits three types: (1) symmetric
-      matrices (e.g., correlations, distances), (2) raw data (with participants
-      or other units of obsrevation in rows, and variables in columns), and (3)
-      matrices that permit to compare individual differences (several symmetric
-      matrices, one per person, concatenated over rows). Use the tabs (“Mode”)
-      in the analysis UI to determine the type of input data.")</p>
+      matrices (e.g., correlations, distances), (2) rectagular matrices (with
+      participants or other units of obsrevation in rows, and variables in
+      columns), and (3) matrices that permit to compare individual differences
+      (several symmetric matrices, one per person, concatenated over rows). Use
+      the tabs (“Mode”) in the analysis UI to determine the type of input
+      data.")</p>
       <p>The symmetric matrices that serve as input for this form of MDS, can
       have several formats: (a) full matrices, (b) triangular matrices, and (c)
       sparse matrices. If the data are not already distances, they need to be
@@ -24,24 +25,25 @@ items:
       See Additional Information at the end of the Results output for more
       detailed explanations.</p>
 
-  - name: genRaw
+  - name: genRct
     type: Html
-    visible: (shwInf && mdeMDS:Raw)
+    visible: (shwInf && mdeMDS:Rct)
     clearWith:
       - mdeMDS
     content: >-
       <p>When performing Multidimensional Scaling, you first need to decide
       what type of data you have. jMDS permits three types: (1) symmetric
-      matrices (e.g., correlations, distances), (2) raw data (with participants
-      or other units of obsrevation in rows, and variables in columns), and (3)
-      matrices that permit to compare individual differences (several symmetric
-      matrices, one per person, concatenated over rows). Use the tabs (“Mode”)
-      in the analysis UI to determine the type of input data.")</p>
-      <p>When conducting a MDS with raw data, one first needs to decide what
-      should be compared, rows (i.e., persons / units of observation) or
-      columns (i.e., variables). This can be set with the radio buttons
-      underneath the variable boxes in the analysis UI. Please note that rows
-      in the original data containing NAs are automatically excluded.
+      matrices (e.g., correlations, distances), (2) rectagular matrices (with
+      participants or other units of obsrevation in rows, and variables in
+      columns), and (3) matrices that permit to compare individual differences
+      (several symmetric matrices, one per person, concatenated over rows). Use
+      the tabs (“Mode”) in the analysis UI to determine the type of input
+      data.")</p>     
+      <p>When conducting a MDS with rectangular matrices, one first needs to
+      decide what should be compared, rows (i.e., persons / units of
+      observation) or columns (i.e., variables). This can be set with the radio
+      buttons underneath the variable boxes in the analysis UI. Please note that
+      rows in the original data containing NAs are automatically excluded.
       Typically, the data are not already distances. That is, they need to be
       converted using the drop-down-menu “Transform Similarities to Distances”.
       Depending on which transformation is chosen, the data are either analyzed
@@ -59,11 +61,12 @@ items:
     content: >-
       <p>When performing Multidimensional Scaling, you first need to decide
       what type of data you have. jMDS permits three types: (1) symmetric
-      matrices (e.g., correlations, distances), (2) raw data (with participants
-      or other units of obsrevation in rows, and variables in columns), and (3)
-      matrices that permit to compare individual differences (several symmetric
-      matrices, one per person, concatenated over rows). Use the tabs (“Mode”)
-      in the analysis UI to determine the type of input data.")</p>
+      matrices (e.g., correlations, distances), (2) rectagular matrices (with
+      participants or other units of obsrevation in rows, and variables in
+      columns), and (3) matrices that permit to compare individual differences
+      (several symmetric matrices, one per person, concatenated over rows). Use
+      the tabs (“Mode”) in the analysis UI to determine the type of input
+      data.")</p>     
       <p>The matrices that serve as input for this form of MDS are matrices
       (one per individual) that are concatenated (over rows). These individual
       matrices can have one of the following formats: (a) full matrices, (b)
@@ -77,22 +80,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
       - clmSPP
     content: ""
 
@@ -104,22 +107,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
       - clmSPP
     rows: 0
     columns:
@@ -138,29 +141,30 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - bplSym
-      - bplRaw
+      - bplRct
       - bplInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
       - cfgBbl
       - cfgBPl
       - cfgInX
       - cfgInY
+      - cfgB4R
 
   - name: figShp
     type: Image
@@ -173,22 +177,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
 
   - name: figStr
     type: Image
@@ -201,22 +205,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
 
   - name: figRes
     type: Image
@@ -229,22 +233,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
 
   - name: figHst
     type: Image
@@ -257,22 +261,22 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
 
   - name: figWgh
     type: Image
@@ -327,13 +331,13 @@ items:
       These datasets can be accessed using the file menu (☰) - Open - Data
       Library, and then chosing the folder “Multidimensional Scaling (MDS) for
       jamovi”. Each dataset has tags, describing with which mode it should be
-      used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the
+      used (“Symmetric”, “Rectangular”, or “Individual Diff.”), and whether the
       data are already “Distances” or need to be transformed (“Correlations”,
       “Similarities”).</p>
 
-  - name: addRaw
+  - name: addRct
     type: Html
-    visible: (shwInf && mdeMDS:Raw)
+    visible: (shwInf && mdeMDS:Rct)
     clearWith:
       - mdeMDS
     content: >-
@@ -351,32 +355,33 @@ items:
       “tertiary” - requires that the means of the tie blocks are in the correct
       order.</p>
       <p><strong>Transforming similarities to distances</strong>: Typically,
-      raw data are not already distances (i.e., ranks within each row, if
-      columns are to be compared). If they are distamces, choose “Already
-      Distances (no transform.)”, otherwise choose one of the following
-      tranformations: If the data are preferences or ratings, they may be
-      transformed by beeing reversed or ranked. When using one of these (or no)
-      tranformation, the shape (rows and columns) of the original data is
-      preserved and <code>smacofRect</code> is used for calculating the MDS
+      rectangular matrices are not already distances (i.e., ranks within each
+      row, if columns are to be compared). If they are distamces, choose
+      “Already Distances (no transform.)”, otherwise choose one of the
+      following tranformations: If the data are preferences or ratings, they
+      may be transformed by beeing reversed or ranked. When using one of these
+      (or no) tranformation, the shape (rows and columns) of the original data
+      is preserved and <code>smacofRect</code> is used for calculating the MDS
       solution. Alternatively, the transformations can be either correlating
-      the data or calculating distances from the raw data. If correlations are
-      calculated (over rows or columns, as indicated; and using either
-      parametric - Pearson - or non-parametric - Kendall or Spearman -
-      correlations), these correlations are then converted into distances. If
-      distance measures are calculated (over rows or columns, as indicated),
-      these can be Euclidian, Manhattan, Minkowski or Jaccard distances, and
-      one can further determine whether these distance measures shall be
-      calculated on the original or z-standardized data. Using correlations or
-      distance measures as transformations changes the shape of the data matrix
-      into a symmetric matrix (either of the size rows x rows or columns x
-      columns), which is then analyzed using <code>smacofSym</code>.</p>
+      the data or calculating distances from the rectangular matrices. If
+      correlations are calculated (over rows or columns, as indicated; and
+      using either parametric - Pearson - or non-parametric - Kendall or
+      Spearman - correlations), these correlations are then converted into
+      distances. If distance measures are calculated (over rows or columns, as
+      indicated), these can be Euclidian, Manhattan, Minkowski or Jaccard
+      distances, and one can further determine whether these distance measures
+      shall be calculated on the original or z-standardized data. Using
+      correlations or distance measures as transformations changes the shape of
+      the data matrix into a symmetric matrix (either of the size rows x rows
+      or columns x columns), which is then analyzed using
+      <code>smacofSym</code>.</p>
       <p><strong>Example datasets</strong>: jMDS comes with several example
       datasets that can be used to understand the different possible shapes of
       data matrices, and to try out the different modes of calculating a MDS.
       These datasets can be accessed using the file menu (☰) - Open - Data
       Library, and then chosing the folder “Multidimensional Scaling (MDS) for
       jamovi”. Each dataset has tags, describing with which mode it should be
-      used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the
+      used (“Symmetric”, “Rectangular”, or “Individual Diff.”), and whether the
       data are already “Distances” or need to be transformed (“Correlations”,
       “Similarities”).</p>
 
@@ -421,7 +426,7 @@ items:
       These datasets can be accessed using the file menu (☰) - Open - Data
       Library, and then chosing the folder “Multidimensional Scaling (MDS) for
       jamovi”. Each dataset has tags, describing with which mode it should be
-      used (“Symmetric”, “Raw Data”, or “Individual Diff.”), and whether the
+      used (“Symmetric”, “Rectangular”, or “Individual Diff.”), and whether the
       data are already “Distances” or need to be transformed (“Correlations”,
       “Similarities”).</p>
 
@@ -434,21 +439,21 @@ items:
     clearWith:
       - mdeMDS
       - varSym
-      - varRaw
+      - varRct
       - varInd
       - nmeSym
-      - nmeRaw
+      - nmeRct
       - nmeInd
       - id_Ind
       - xfmSym
-      - xfmRaw
+      - xfmRct
       - xfmInd
       - lvlSym
-      - lvlRaw
+      - lvlRct
       - lvlInd
       - dimSym
-      - dimRaw
+      - dimRct
       - dimInd
-      - dirRaw
+      - dirRct
 
 ...

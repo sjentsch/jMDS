@@ -111,7 +111,7 @@ children:
 # =============================================================================
 
       - type: Content
-        name: Raw
+        name: Rct
         children:
 
 # -----------------------------------------------------------------------------
@@ -124,21 +124,21 @@ children:
                 label: Variables for MDS
                 children:
                   - type: VariablesListBox
-                    name: varRaw
+                    name: varRct
                     isTarget: true
               - type: TargetLayoutBox
                 label: Variable With Row Names (Optional)
                 children:
                   - type: VariablesListBox
-                    name: nmeRaw
+                    name: nmeRct
                     maxItemCount: 1
                     isTarget: true
-                    enable: (dirRaw:col)
+                    enable: (dirRct:col)
               - type: TargetLayoutBox
                 label: Variables For Biplot
                 children:
                   - type: VariablesListBox
-                    name: bplRaw
+                    name: bplRct
                     isTarget: true
                     height: small
 
@@ -156,20 +156,20 @@ children:
                     stretchFactor: 1
                     children:
                       - type: RadioButton
-                        name: lvlRaw_ordinal_primary
-                        optionName: lvlRaw
+                        name: lvlRct_ordinal_primary
+                        optionName: lvlRct
                         optionPart: ordinal_primary
                       - type: RadioButton
-                        name: lvlRaw_ordinal_secondary
-                        optionName: lvlRaw
+                        name: lvlRct_ordinal_secondary
+                        optionName: lvlRct
                         optionPart: ordinal_secondary
                       - type: RadioButton
-                        name: lvlRaw_ordinal_tertiary
-                        optionName: lvlRaw
+                        name: lvlRct_ordinal_tertiary
+                        optionName: lvlRct
                         optionPart: ordinal_tertiary
                       - type: RadioButton
-                        name: lvlRaw_interval
-                        optionName: lvlRaw
+                        name: lvlRct_interval
+                        optionName: lvlRct
                         optionPart: interval
                   - type: LayoutBox
                     style: inline
@@ -182,7 +182,7 @@ children:
                         stretchFactor: 1
                         children:
                           - type: TextBox
-                            name: dimRaw
+                            name: dimRct
                             label: 'Number of MDS Dimensions:'
                             format: number
                       - type: LayoutBox
@@ -191,12 +191,12 @@ children:
                         stretchFactor: 1
                         children:
                           - type: RadioButton
-                            name: dirRaw_col
-                            optionName: dirRaw
+                            name: dirRct_col
+                            optionName: dirRct
                             optionPart: col
                           - type: RadioButton
-                            name: dirRaw_row
-                            optionName: dirRaw
+                            name: dirRct_row
+                            optionName: dirRct
                             optionPart: row
 
           - type: CollapseBox
@@ -209,7 +209,7 @@ children:
                 style: inline
                 children:
                   - type: ComboBox
-                    name: xfmRaw
+                    name: xfmRct
 
 # =============================================================================
 
@@ -336,7 +336,7 @@ children:
           - name: figCfg
             type: CheckBox
             label: Configuration Plot
-            style: inline
+            style: list
             margin: large
             stretchFactor: 1
             children:
@@ -345,6 +345,7 @@ children:
                 style: inline
                 stretchFactor: 1
                 horizontalAlignment: right
+                verticalAlignment: center
                 children:
                   - type: CheckBox
                     name: cfgBbl
@@ -366,6 +367,12 @@ children:
                     label: Invert D2
                     margin: large
                     enable: (figCfg)
+                  - type: CheckBox
+                    name: cfgB4R
+                    label: Show Both (Rows & Cols)
+                    margin: large
+                    enable: (figCfg && mdeMDS:Rct && (xfmRct:none || xfmRct:reverse || xfmRct:rank))
+                    
           - name: figShp
             type: CheckBox
             label: Shepard Plot
