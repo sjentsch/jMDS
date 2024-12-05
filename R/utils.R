@@ -66,26 +66,26 @@ dst2DF <- function(crrDst = NULL, crrDgn = c()) {
     as.data.frame(crrMtx)
 }
 
-# calculate distance measures for raw data to be used with smacofSym
-dstR4S <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "pearson", dirRaw = "col") {
-    if        (xfmRaw %in% c("pearson", "kendall", "spearman")) {
-        smacof::sim2diss(cor(xpsRaw(crrDta, varRaw, nmeRaw, dirRaw), method = xfmRaw, use = "p"), "corr")
-    } else if (xfmRaw %in% paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2))) {
-        stats::dist(t(xpsRaw(crrDta, varRaw, nmeRaw, dirRaw, grepl("^z_", xfmRaw))),
-                    method = gsub("_[0-9]$", "", gsub("^z_", "", xfmRaw)), p = mnkPwr(xfmRaw))
+# calculate distance measures for rectangular matrices to be used with smacofSym
+dstR4S <- function(crrDta = NULL, varRct = c(), nmeRct = c(), xfmRct = "pearson", dirRct = "col") {
+    if        (xfmRct %in% c("pearson", "kendall", "spearman")) {
+        smacof::sim2diss(cor(xpsRct(crrDta, varRct, nmeRct, dirRct), method = xfmRct, use = "p"), "corr")
+    } else if (xfmRct %in% paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2))) {
+        stats::dist(t(xpsRct(crrDta, varRct, nmeRct, dirRct, grepl("^z_", xfmRct))),
+                    method = gsub("_[0-9]$", "", gsub("^z_", "", xfmRct)), p = mnkPwr(xfmRct))
     }
 }
 
-# calculate distance measures for raw data to be used with smacofRect
-dstR4R <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none") {
-    if        (xfmRaw == "none") {
-        rowNme(as.matrix(crrDta[, varRaw]),                        crrDta[, nmeRaw])
-    } else if (xfmRaw == "rank") {
-        rowNme(apply(crrDta[, varRaw], 2, rank),                   crrDta[, nmeRaw])
-    } else if (xfmRaw == "reverse") {
-        rowNme(apply(crrDta[, varRaw], 2, function(x) x - min(x)), crrDta[, nmeRaw])
+# calculate distance measures for rectangular matrices to be used with smacofRect
+dstR4R <- function(crrDta = NULL, varRct = c(), nmeRct = c(), xfmRct = "none") {
+    if        (xfmRct == "none") {
+        rowNme(as.matrix(crrDta[, varRct]),                        crrDta[, nmeRct])
+    } else if (xfmRct == "rank") {
+        rowNme(apply(crrDta[, varRct], 2, rank),                   crrDta[, nmeRct])
+    } else if (xfmRct == "reverse") {
+        rowNme(apply(crrDta[, varRct], 2, function(x) x - min(x)), crrDta[, nmeRct])
     } else {
-        jmvcore::reject("xfmRaw must be either \"none\", \"rank\" or \"reverse\".")
+        jmvcore::reject("xfmRct must be either \"none\", \"rank\" or \"reverse\".")
         invisible(NULL)
     }
 }
@@ -127,6 +127,26 @@ dstSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none") {
         smacof::sim2diss(crrDta, method = xfmSym, to.dist = TRUE)
     }
 }
+
+dtaCfg <- function(crrMDS = NULL, dirRct = "col", outTyp = "T", blnBbl = FALSE, blnBth = TRUE, crrClr = NULL) {
+    crrDta <- data.frame()
+    # run one loop with dirRct (which is not relevant for symm. and ind. diff.) and
+    # run two loops only for rectangular matrices, plots as output, and if show both rows and cols is set
+    for (crrDir in c(dirRct, rep(setdiff(c("col", "row"), dirRct), outTyp == "P" && is(crrMDS, "smacofR") && blnBth))) {
+        crrCfg <- nmeCfg(crrMDS, crrDir)
+        crrDta <- rbind(crrDta, cbind(data.frame(nmeObj = row.names(crrMDS[[crrCfg]])),
+                                      as.data.frame(crrMDS[[crrCfg]]),
+                                      data.frame(SPP    = crrMDS[[nmeSPP(crrCfg)]],
+                                                 pntSze = bblPnt(crrMDS[[nmeSPP(crrCfg)]], blnBbl),
+                                                 pntClr = ifelse(is(crrMDS, "smacofR") && blnBth, c(crrDta$pntClr, 0)[1] + 1, 2),
+                                                 txtSze = ifelse(is(crrMDS, "smacofR") && blnBth, 3, 4),
+                                                 txtClr = ifelse(is(crrMDS, "smacofR") && blnBth, c(crrDta$txtClr, 0)[1] + 1, 1))))
+    }
+    if (!is.null(crrClr)) crrDta[, c("pntClr", "txtClr")] <- lapply(c("pntClr", "txtClr"), function(C) crrClr[crrDta[, C]])
+
+    crrDta[, -c(rep(ncol(crrDta) - seq(0, 3), outTyp == "T"), rep(ncol(crrDta) - 4, outTyp == "P"))]
+}
+
 
 getID  <- function(crrID = NULL) {
     if (length(crrID) == 0) return(c())
@@ -214,16 +234,16 @@ mdsInd <- function(crrDta = NULL, varInd = c(), nmeInd = c(), id_Ind = c(), xfmI
     crrMDS
 }
 
-mdsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), xfmRaw = "none", dirRaw = "col", dimRaw = 2, lvlRaw = "ordinal") {
-    crrArg <- c(list(mdeMDS = "Raw"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
+mdsRct <- function(crrDta = NULL, varRct = c(), nmeRct = c(), xfmRct = "none", dirRct = "col", dimRct = 2, lvlRct = "ordinal") {
+    crrArg <- c(list(mdeMDS = "Rct"), as.list(environment()), list(crrHsh = digest::digest(crrDta)))
     # (a) either use the data as they are ("none"), or revert or rank them before using them with smacofRect
-    if        (xfmRaw %in% c("none", "reverse", "rank")) {
-        crrMDS <- smacof::smacofRect(dstR4R(crrDta, varRaw, nmeRaw, xfmRaw),        ndim = dimRaw, type = getTyp(lvlRaw), ties = getTie(lvlRaw))
+    if        (xfmRct %in% c("none", "reverse", "rank")) {
+        crrMDS <- smacof::smacofRect(dstR4R(crrDta, varRct, nmeRct, xfmRct),        ndim = dimRct, type = getTyp(lvlRct), ties = getTie(lvlRct))
     # (b) calculate correlations (converted to distances) or distance measures (e.g., euclidean) before using them with smacofSym 
-    } else if (xfmRaw %in% c("pearson", "kendall", "spearman", paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2)))) {
-        crrMDS <- smacof::smacofSym(dstR4S(crrDta, varRaw, nmeRaw, xfmRaw, dirRaw), ndim = dimRaw, type = getTyp(lvlRaw), ties = getTie(lvlRaw))
+    } else if (xfmRct %in% c("pearson", "kendall", "spearman", paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2)))) {
+        crrMDS <- smacof::smacofSym(dstR4S(crrDta, varRct, nmeRct, xfmRct, dirRct), ndim = dimRct, type = getTyp(lvlRct), ties = getTie(lvlRct))
     } else {
-        jmvcore::reject(sprintf("xfmRaw needs to be one of the following methods: \"%s\"", paste(c("none", "reverse", "rank", "pearson",
+        jmvcore::reject(sprintf("xfmRct needs to be one of the following methods: \"%s\"", paste(c("none", "reverse", "rank", "pearson",
           "kendall", "spearman", paste0(c("", "z_"), rep(c(sprintf("minkowski_%d", seq(4)), "binary"), each = 2))), collapse = "\", \"")))
     }
     attr(crrMDS, "crrArg") <- crrArg[setdiff(names(crrArg), "crrDta")]
@@ -241,12 +261,12 @@ mdsSym <- function(crrDta = NULL, varSym = c(), nmeSym = c(), xfmSym = "none", d
     crrMDS   
 }
 
-mnkPwr <- function(xfmRaw = "none") {
-    na.omit(c(as.numeric(strsplit(gsub("z_", "", xfmRaw), "_")[[1]][2]), 2))[1]
+mnkPwr <- function(xfmMDS = "none") {
+    na.omit(c(as.numeric(strsplit(gsub("z_", "", xfmMDS), "_")[[1]][2]), 2))[1]
 }
 
-nmeCfg <- function(crrMDS = NULL, dirRaw = "col") {
-    ifelse(is(crrMDS, "smacofB"), "conf", ifelse(is(crrMDS, "smacofR"), paste0("conf.", dirRaw), ifelse(is(crrMDS, "smacofID"), "gspace", "")))
+nmeCfg <- function(crrMDS = NULL, dirRct = "col") {
+    ifelse(is(crrMDS, "smacofB"), "conf", ifelse(is(crrMDS, "smacofR"), paste0("conf.", dirRct), ifelse(is(crrMDS, "smacofID"), "gspace", "")))
 }
 
 nmeSPP <- function(crrCfg = c()) gsub("conf|gspace", "spp", crrCfg)
@@ -276,7 +296,7 @@ rowNme <- function(crrDta = NULL, valNme = c()) {
 rplDsc <- function(crrDsc = NULL, rplDsc = "", rplVar = "", bplVar = NULL) {
     if (nzchar(rplDsc))   crrDsc[["description"]] <- gsub("_RPLDSC_", rplDsc, crrDsc[["description"]])
     if (nzchar(rplVar))   crrDsc[["variables"]]   <- gsub("_RPLVAR_", rplVar, crrDsc[["variables"]])
-    if (!is.null(bplVar)) crrDsc[["variables"]]   <- c(bplVar,                crrDsc[["variables"]])
+    if (!is.null(bplVar)) crrDsc[["variables"]]   <-                        c(crrDsc[["variables"]], bplVar)
 
     crrDsc
 }
@@ -289,14 +309,14 @@ setDgn <- function(crrDta = NULL, valDgn = 1) {
 
 sumLst <- function(crrLst = NULL) as.numeric(smacof:::sumList(crrLst))
 
-xpsRaw <- function(crrDta = NULL, varRaw = c(), nmeRaw = c(), dirRaw = "col", sclDta = FALSE) {
-    if (sclDta) crrDta[, varRaw] <- apply(crrDta[, varRaw], 2, scale)
-    if        (dirRaw == "col") {
-        rowNme(  as.matrix(crrDta[, varRaw]), crrDta[, nmeRaw])
-    } else if (dirRaw == "row") {
-        t(rowNme(as.matrix(crrDta[, varRaw]), crrDta[, nmeRaw]))
+xpsRct <- function(crrDta = NULL, varRct = c(), nmeRct = c(), dirRct = "col", sclDta = FALSE) {
+    if (sclDta) crrDta[, varRct] <- apply(crrDta[, varRct], 2, scale)
+    if        (dirRct == "col") {
+        rowNme(  as.matrix(crrDta[, varRct]), crrDta[, nmeRct])
+    } else if (dirRct == "row") {
+        t(rowNme(as.matrix(crrDta[, varRct]), crrDta[, nmeRct]))
     } else {
-        jmvcore::reject("dirRaw must be either \"col\" or \"row\".")
+        jmvcore::reject("dirRct must be either \"col\" or \"row\".")
         invisible(NULL)
     }
 }

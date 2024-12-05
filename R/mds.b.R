@@ -97,11 +97,11 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 crrMDS <- mdsSym(crrDta = crrDta, varSym = self$options$varSym, nmeSym = self$options$nmeSym,
                                  xfmSym = xfmSnI(self$options), dimSym = self$options$dimSym, lvlSym = self$options$lvlSym)
             # [2] input data as “usual” data matrix (i.e., vars in columns, units / subjects in rows)
-            } else if (self$options$mdeMDS == "Raw" &&
-                       (self$options$dirRaw == "col" && length(self$options$varRaw) >= self$options$dimRaw + 1) ||
-                       (self$options$dirRaw == "row" && nrow(crrDta)                >= self$options$dimRaw + 1)) {
-                crrMDS <- mdsRaw(crrDta = crrDta, varRaw = self$options$varRaw, nmeRaw = self$options$nmeRaw, xfmRaw = self$options$xfmRaw,
-                                 dirRaw = self$options$dirRaw, dimRaw = self$options$dimRaw, lvlRaw = self$options$lvlRaw)
+            } else if (self$options$mdeMDS == "Rct" &&
+                       (self$options$dirRct == "col" && length(self$options$varRct) >= self$options$dimRct + 1) ||
+                       (self$options$dirRct == "row" && nrow(crrDta)                >= self$options$dimRct + 1)) {
+                crrMDS <- mdsRct(crrDta = crrDta, varRct = self$options$varRct, nmeRct = self$options$nmeRct, xfmRct = self$options$xfmRct,
+                                 dirRct = self$options$dirRct, dimRct = self$options$dimRct, lvlRct = self$options$lvlRct)
             # [3] input data for determining individual differences (i.e., a series
             #     of symmetric matrices, number of vars * number of individuals)
             } else if (self$options$mdeMDS == "Ind" &&
@@ -129,8 +129,10 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             } else {
                 self$results[[paste0("gen", crrMde)]]$setVisible(FALSE)
                 crrInf <- c(jmvcore::format(.("Estimated <strong>{m}</strong> (of type \"{t}\") with {o} objects in {i} iterations."),
-                                            m = crrMDS$model, t = getTyp(self$options[[paste0("lvl", crrMde)]]),
-                                            o = ifelse(is(crrMDS, "smacofR") && crrDrR == "row", crrMDS$nind, crrMDS$nobj), i = crrMDS$niter),
+                                            m = crrMDS$model,
+                                            t = getTyp(self$options[[paste0("lvl", crrMde)]]),
+                                            o = ifelse(is(crrMDS, "smacofR") && self$options$dirRct == "row", crrMDS$nind, crrMDS$nobj),
+                                            i = crrMDS$niter),
                             jmvcore::format(.("Stress value: <strong>{v}</strong>"), v = round(crrMDS$stress, 3)),
                             private$.dcdXfm())
                 self$results$mdlInf$setContent(paste(crrInf, collapse = "</p><p>"))
@@ -144,10 +146,10 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # for both symmetric matrices and individual differences, the length of variables plus the name of an eventual name
             # variable determines the number of rows (the name variable is only necessary for sparse matrices, where the number
             # of variables is reduced by 1 - which is compensated for by adding the name variable - length 1)
-            # for raw data matrices is becomes slightly more complicated: 
+            # for data matrices (rectagular) is becomes slightly more complicated: 
             crrRow <- ifelse(crrMde %in% c("Sym", "Ind"),
                              length(c(self$options[[paste0("var", crrMde)]], self$options[[paste0("nme", crrMde)]])),
-                             ifelse(self$options$dirRaw == "col", length(self$options$varRaw), nrow(self$readDataset())))
+                             ifelse(self$options$dirRct == "col", length(self$options$varRct), nrow(self$readDataset())))
             if (crrRow < crrDim + 1) return(invisible(NULL))
 
             crrTbl <- self$results$tblCfg
@@ -160,10 +162,7 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMDS <- self$getMDS
             if (is.null(crrMDS)) return(invisible(NULL))
 
-            crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
-            crrDta <- cbind(data.frame(nmeObj = row.names(crrMDS[[crrCfg]])),
-                            as.data.frame(crrMDS[[crrCfg]]),
-                            data.frame(SPP = crrMDS[[nmeSPP(crrCfg)]]))
+            crrDta <- dtaCfg(crrMDS, self$options$dirRct, "T")
             crrTbl <- self$results$tblCfg
             for (i in seq(nrow(crrDta))) {
                 crrTbl$setRow(rowNo = i, as.list(crrDta[i, ]))
@@ -176,16 +175,15 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .pltCfg = function(image, ggtheme, theme, ...) {
             crrMDS <- image$state
             if (is.null(crrMDS)) return(FALSE)
-
             crrDim <- self$options[[paste0("dim", self$options$mdeMDS)]]
             nteDim <- if (crrDim > 2) jmvcore::format(.("(showing only the first 2 of {d} dimensions)"), d = crrDim) else NULL
-            crrCfg <- nmeCfg(crrMDS, self$options$dirRaw)
-            crrDta <- cbind(as.data.frame(crrMDS[[crrCfg]]), data.frame(pntSze = bblPnt(crrMDS[[nmeSPP(crrCfg)]], self$options$cfgBbl)))
+
+            crrDta <- dtaCfg(crrMDS, self$options$dirRct, "P", self$options$cfgBbl, self$options$cfgB4R, theme$color)
             crrRng <- c(rndMnM(min(vapply(crrDta[, c("D1", "D2")], min, numeric(1))), 3),
                         rndMnM(max(vapply(crrDta[, c("D1", "D2")], max, numeric(1))), 3))
-            crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = D1, y = D2, label = rownames(crrDta))) +
-                      ggplot2::geom_point(size = crrDta$pntSze, colour = theme$color[2]) +
-                      ggplot2::geom_text(size = 4, vjust = -0.8) +
+            crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = D1, y = D2, label = nmeObj)) +
+                      ggplot2::geom_point(size = crrDta$pntSze, color = crrDta$pntClr) +
+                      ggplot2::geom_text(size = crrDta$txtSze, color = crrDta$txtClr, vjust = -0.8) +
                       ggplot2::coord_fixed() +
                       ggplot2::geom_vline(xintercept = 0, linewidth = 0.2, linetype = "dotted") +
                       ggplot2::geom_hline(yintercept = 0, linewidth = 0.2, linetype = "dotted") + 
@@ -293,7 +291,6 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMDS <- image$state
             if (is.null(crrMDS)) return(FALSE)
             
-            crrSPP <- crrMDS[[nmeSPP(nmeCfg(crrMDS, self$options$dirRaw))]]
             crrDta <- data.frame(x = seq_along(crrSPP), y = sort(crrSPP, decreasing = TRUE))
             crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = x, y = y, label = rownames(crrDta))) +
                       ggplot2::geom_segment(ggplot2::aes(x = x, xend = x, y = 0, yend = y), color = theme$color[1], linetype = "dotted") +
@@ -397,8 +394,8 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 } else {
                     jmvcore::reject(jmvcore::format(.("Invalid transformation {xfm}."), xfm = crrXfm))
                 }
-            } else if (crrMde %in% c("Raw")) {
-                crrDir <- gsub("col", "columns", gsub("row", "rows", crrArg[["dirRaw"]]))
+            } else if (crrMde %in% c("Rct")) {
+                crrDir <- gsub("col", "columns", gsub("row", "rows", self$options[["dirRct"]]))
                 dscR2S <- .(" (resulting in a symmetric matrix that afterwards was analyzed using <code>smacofSym</code>)")
                 if        (crrXfm == "none") {
                     .("Matrix contained already distances (i.e., no transformation was applied).")

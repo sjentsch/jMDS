@@ -14,13 +14,13 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dimSym = 2,
             xfmSym = "none",
             xfiSym = 0,
-            varRaw = NULL,
-            nmeRaw = NULL,
-            bplRaw = NULL,
-            lvlRaw = "ordinal_secondary",
-            dimRaw = 2,
-            dirRaw = "col",
-            xfmRaw = "none",
+            varRct = NULL,
+            nmeRct = NULL,
+            bplRct = NULL,
+            lvlRct = "ordinal_secondary",
+            dimRct = 2,
+            dirRct = "col",
+            xfmRct = "none",
             varInd = NULL,
             nmeInd = NULL,
             id_Ind = NULL,
@@ -35,6 +35,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             cfgBPl = FALSE,
             cfgInX = FALSE,
             cfgInY = FALSE,
+            cfgB4R = TRUE,
             figShp = FALSE,
             figStr = FALSE,
             figRes = FALSE,
@@ -53,7 +54,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 mdeMDS,
                 options=list(
                     "Sym",
-                    "Raw",
+                    "Rct",
                     "Ind"),
                 default="Sym")
             private$..varSym <- jmvcore::OptionVariables$new(
@@ -120,57 +121,57 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "xfiSym",
                 xfiSym,
                 default=0)
-            private$..varRaw <- jmvcore::OptionVariables$new(
-                "varRaw",
-                varRaw,
+            private$..varRct <- jmvcore::OptionVariables$new(
+                "varRct",
+                varRct,
                 suggested=list(
                     "ordinal",
                     "continuous"),
                 permitted=list(
                     "numeric"),
                 rejectInf=FALSE)
-            private$..nmeRaw <- jmvcore::OptionVariable$new(
-                "nmeRaw",
-                nmeRaw,
+            private$..nmeRct <- jmvcore::OptionVariable$new(
+                "nmeRct",
+                nmeRct,
                 suggested=list(
                     "nominal"),
                 permitted=list(
                     "factor"),
                 rejectInf=FALSE)
-            private$..bplRaw <- jmvcore::OptionVariables$new(
-                "bplRaw",
-                bplRaw,
+            private$..bplRct <- jmvcore::OptionVariables$new(
+                "bplRct",
+                bplRct,
                 suggested=list(
                     "ordinal",
                     "continuous"),
                 permitted=list(
                     "numeric"),
                 rejectInf=FALSE)
-            private$..lvlRaw <- jmvcore::OptionList$new(
-                "lvlRaw",
-                lvlRaw,
+            private$..lvlRct <- jmvcore::OptionList$new(
+                "lvlRct",
+                lvlRct,
                 options=list(
                     "interval",
                     "ordinal_primary",
                     "ordinal_secondary",
                     "ordinal_tertiary"),
                 default="ordinal_secondary")
-            private$..dimRaw <- jmvcore::OptionInteger$new(
-                "dimRaw",
-                dimRaw,
+            private$..dimRct <- jmvcore::OptionInteger$new(
+                "dimRct",
+                dimRct,
                 min=2,
                 max=10,
                 default=2)
-            private$..dirRaw <- jmvcore::OptionList$new(
-                "dirRaw",
-                dirRaw,
+            private$..dirRct <- jmvcore::OptionList$new(
+                "dirRct",
+                dirRct,
                 options=list(
                     "col",
                     "row"),
                 default="col")
-            private$..xfmRaw <- jmvcore::OptionList$new(
-                "xfmRaw",
-                xfmRaw,
+            private$..xfmRct <- jmvcore::OptionList$new(
+                "xfmRct",
+                xfmRct,
                 options=list(
                     "none",
                     "reverse",
@@ -287,6 +288,10 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "cfgInY",
                 cfgInY,
                 default=FALSE)
+            private$..cfgB4R <- jmvcore::OptionBool$new(
+                "cfgB4R",
+                cfgB4R,
+                default=TRUE)
             private$..figShp <- jmvcore::OptionBool$new(
                 "figShp",
                 figShp,
@@ -322,13 +327,13 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..dimSym)
             self$.addOption(private$..xfmSym)
             self$.addOption(private$..xfiSym)
-            self$.addOption(private$..varRaw)
-            self$.addOption(private$..nmeRaw)
-            self$.addOption(private$..bplRaw)
-            self$.addOption(private$..lvlRaw)
-            self$.addOption(private$..dimRaw)
-            self$.addOption(private$..dirRaw)
-            self$.addOption(private$..xfmRaw)
+            self$.addOption(private$..varRct)
+            self$.addOption(private$..nmeRct)
+            self$.addOption(private$..bplRct)
+            self$.addOption(private$..lvlRct)
+            self$.addOption(private$..dimRct)
+            self$.addOption(private$..dirRct)
+            self$.addOption(private$..xfmRct)
             self$.addOption(private$..varInd)
             self$.addOption(private$..nmeInd)
             self$.addOption(private$..id_Ind)
@@ -343,6 +348,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..cfgBPl)
             self$.addOption(private$..cfgInX)
             self$.addOption(private$..cfgInY)
+            self$.addOption(private$..cfgB4R)
             self$.addOption(private$..figShp)
             self$.addOption(private$..figStr)
             self$.addOption(private$..figRes)
@@ -360,13 +366,13 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         dimSym = function() private$..dimSym$value,
         xfmSym = function() private$..xfmSym$value,
         xfiSym = function() private$..xfiSym$value,
-        varRaw = function() private$..varRaw$value,
-        nmeRaw = function() private$..nmeRaw$value,
-        bplRaw = function() private$..bplRaw$value,
-        lvlRaw = function() private$..lvlRaw$value,
-        dimRaw = function() private$..dimRaw$value,
-        dirRaw = function() private$..dirRaw$value,
-        xfmRaw = function() private$..xfmRaw$value,
+        varRct = function() private$..varRct$value,
+        nmeRct = function() private$..nmeRct$value,
+        bplRct = function() private$..bplRct$value,
+        lvlRct = function() private$..lvlRct$value,
+        dimRct = function() private$..dimRct$value,
+        dirRct = function() private$..dirRct$value,
+        xfmRct = function() private$..xfmRct$value,
         varInd = function() private$..varInd$value,
         nmeInd = function() private$..nmeInd$value,
         id_Ind = function() private$..id_Ind$value,
@@ -381,6 +387,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         cfgBPl = function() private$..cfgBPl$value,
         cfgInX = function() private$..cfgInX$value,
         cfgInY = function() private$..cfgInY$value,
+        cfgB4R = function() private$..cfgB4R$value,
         figShp = function() private$..figShp$value,
         figStr = function() private$..figStr$value,
         figRes = function() private$..figRes$value,
@@ -397,13 +404,13 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..dimSym = NA,
         ..xfmSym = NA,
         ..xfiSym = NA,
-        ..varRaw = NA,
-        ..nmeRaw = NA,
-        ..bplRaw = NA,
-        ..lvlRaw = NA,
-        ..dimRaw = NA,
-        ..dirRaw = NA,
-        ..xfmRaw = NA,
+        ..varRct = NA,
+        ..nmeRct = NA,
+        ..bplRct = NA,
+        ..lvlRct = NA,
+        ..dimRct = NA,
+        ..dirRct = NA,
+        ..xfmRct = NA,
         ..varInd = NA,
         ..nmeInd = NA,
         ..id_Ind = NA,
@@ -418,6 +425,7 @@ mdsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..cfgBPl = NA,
         ..cfgInX = NA,
         ..cfgInY = NA,
+        ..cfgB4R = NA,
         ..figShp = NA,
         ..figStr = NA,
         ..figRes = NA,
@@ -432,7 +440,7 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         genSym = function() private$.items[["genSym"]],
-        genRaw = function() private$.items[["genRaw"]],
+        genRct = function() private$.items[["genRct"]],
         genInd = function() private$.items[["genInd"]],
         mdlInf = function() private$.items[["mdlInf"]],
         tblCfg = function() private$.items[["tblCfg"]],
@@ -443,7 +451,7 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         figHst = function() private$.items[["figHst"]],
         figWgh = function() private$.items[["figWgh"]],
         addSym = function() private$.items[["addSym"]],
-        addRaw = function() private$.items[["addRaw"]],
+        addRct = function() private$.items[["addRct"]],
         addInd = function() private$.items[["addInd"]],
         ov_Cfg = function() private$.items[["ov_Cfg"]]),
     private = list(),
@@ -459,43 +467,43 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(shwInf && mdeMDS:Sym)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p> <p>The symmetric matrices that serve as input for this form of MDS, can have several formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. See Additional Information at the end of the Results output for more detailed explanations.</p>"))
+                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) rectagular matrices (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p> <p>The symmetric matrices that serve as input for this form of MDS, can have several formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. See Additional Information at the end of the Results output for more detailed explanations.</p>"))
             self$add(jmvcore::Html$new(
                 options=options,
-                name="genRaw",
-                visible="(shwInf && mdeMDS:Raw)",
+                name="genRct",
+                visible="(shwInf && mdeMDS:Rct)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p> <p>When conducting a MDS with raw data, one first needs to decide what should be compared, rows (i.e., persons / units of observation) or columns (i.e., variables). This can be set with the radio buttons underneath the variable boxes in the analysis UI. Please note that rows in the original data containing NAs are automatically excluded. Typically, the data are not already distances. That is, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. Depending on which transformation is chosen, the data are either analyzed using <code>smacofRect</code> (applies when using the transformations \u201CReverse\u201D or \u201CRank\u201D), or using <code>smacofSym</code> (applies when using transformations involving correlations or distances). See Additional Information at the end of the Results output for more detailed explanations.</p>"))
+                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) rectagular matrices (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p>      <p>When conducting a MDS with rectangular matrices, one first needs to decide what should be compared, rows (i.e., persons / units of observation) or columns (i.e., variables). This can be set with the radio buttons underneath the variable boxes in the analysis UI. Please note that rows in the original data containing NAs are automatically excluded. Typically, the data are not already distances. That is, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. Depending on which transformation is chosen, the data are either analyzed using <code>smacofRect</code> (applies when using the transformations \u201CReverse\u201D or \u201CRank\u201D), or using <code>smacofSym</code> (applies when using transformations involving correlations or distances). See Additional Information at the end of the Results output for more detailed explanations.</p>"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="genInd",
                 visible="(shwInf && mdeMDS:Ind)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) raw data (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p> <p>The matrices that serve as input for this form of MDS are matrices (one per individual) that are concatenated (over rows). These individual matrices can have one of the following formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. See Additional Information at the end of the Results output for more detailed explanations.</p>"))
+                content="<p>When performing Multidimensional Scaling, you first need to decide what type of data you have. jMDS permits three types: (1) symmetric matrices (e.g., correlations, distances), (2) rectagular matrices (with participants or other units of obsrevation in rows, and variables in columns), and (3) matrices that permit to compare individual differences (several symmetric matrices, one per person, concatenated over rows). Use the tabs (\u201CMode\u201D) in the analysis UI to determine the type of input data.\")</p>      <p>The matrices that serve as input for this form of MDS are matrices (one per individual) that are concatenated (over rows). These individual matrices can have one of the following formats: (a) full matrices, (b) triangular matrices, and (c) sparse matrices. If the data are not already distances, they need to be converted using the drop-down-menu \u201CTransform Similarities to Distances\u201D. See Additional Information at the end of the Results output for more detailed explanations.</p>"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="mdlInf",
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw",
+                    "dirRct",
                     "clmSPP"),
                 content=""))
             self$add(jmvcore::Table$new(
@@ -509,22 +517,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw",
+                    "dirRct",
                     "clmSPP"),
                 rows=0,
                 columns=list(
@@ -543,29 +551,30 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "bplSym",
-                    "bplRaw",
+                    "bplRct",
                     "bplInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw",
+                    "dirRct",
                     "cfgBbl",
                     "cfgBPl",
                     "cfgInX",
-                    "cfgInY")))
+                    "cfgInY",
+                    "cfgB4R")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figShp",
@@ -577,22 +586,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw")))
+                    "dirRct")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figStr",
@@ -604,22 +613,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw")))
+                    "dirRct")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figRes",
@@ -631,22 +640,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw")))
+                    "dirRct")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figHst",
@@ -658,22 +667,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw")))
+                    "dirRct")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="figWgh",
@@ -696,21 +705,21 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(shwInf && mdeMDS:Sym)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option \u201CAlready Distances (no transform.)\u201D in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRaw Data\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
+                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option \u201CAlready Distances (no transform.)\u201D in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRectangular\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
             self$add(jmvcore::Html$new(
                 options=options,
-                name="addRaw",
-                visible="(shwInf && mdeMDS:Raw)",
+                name="addRct",
+                visible="(shwInf && mdeMDS:Rct)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: Data matrices have the shape that is usual for most / all other analyses included in jamovi, namely individuals (or other units of observation) as rows and variables as columns.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: Typically, raw data are not already distances (i.e., ranks within each row, if columns are to be compared). If they are distamces, choose \u201CAlready Distances (no transform.)\u201D, otherwise choose one of the following tranformations: If the data are preferences or ratings, they may be transformed by beeing reversed or ranked. When using one of these (or no) tranformation, the shape (rows and columns) of the original data is preserved and <code>smacofRect</code> is used for calculating the MDS solution. Alternatively, the transformations can be either correlating the data or calculating distances from the raw data. If correlations are calculated (over rows or columns, as indicated; and using either parametric - Pearson - or non-parametric - Kendall or Spearman - correlations), these correlations are then converted into distances. If distance measures are calculated (over rows or columns, as indicated), these can be Euclidian, Manhattan, Minkowski or Jaccard distances, and one can further determine whether these distance measures shall be calculated on the original or z-standardized data. Using correlations or distance measures as transformations changes the shape of the data matrix into a symmetric matrix (either of the size rows x rows or columns x columns), which is then analyzed using <code>smacofSym</code>.</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRaw Data\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
+                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: Data matrices have the shape that is usual for most / all other analyses included in jamovi, namely individuals (or other units of observation) as rows and variables as columns.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: Typically, rectangular matrices are not already distances (i.e., ranks within each row, if columns are to be compared). If they are distamces, choose \u201CAlready Distances (no transform.)\u201D, otherwise choose one of the following tranformations: If the data are preferences or ratings, they may be transformed by beeing reversed or ranked. When using one of these (or no) tranformation, the shape (rows and columns) of the original data is preserved and <code>smacofRect</code> is used for calculating the MDS solution. Alternatively, the transformations can be either correlating the data or calculating distances from the rectangular matrices. If correlations are calculated (over rows or columns, as indicated; and using either parametric - Pearson - or non-parametric - Kendall or Spearman - correlations), these correlations are then converted into distances. If distance measures are calculated (over rows or columns, as indicated), these can be Euclidian, Manhattan, Minkowski or Jaccard distances, and one can further determine whether these distance measures shall be calculated on the original or z-standardized data. Using correlations or distance measures as transformations changes the shape of the data matrix into a symmetric matrix (either of the size rows x rows or columns x columns), which is then analyzed using <code>smacofSym</code>.</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRectangular\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="addInd",
                 visible="(shwInf && mdeMDS:Ind)",
                 clearWith=list(
                     "mdeMDS"),
-                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required. When comparing individual differences, each individual is described by one matrix of these matrix types. The matrices are concatenated over rows. That is, if V is the number of variables assigned to \u201CVariables for MDS\u201D, the first V rows are the data for the first individual, the second V rows for the second individual, and so on.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option \u201CAlready Distances (no transform.)\u201D in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRaw Data\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
+                content="<h2>Additional Information</h2> <p><strong>Shape of data matrices</strong>: A <em>full matrix</em> contains both upper and lower triangular matrix as well as values in the main diagonal. A <em>triangular matrix</em> contains either the upper or the lower triangular matrix, and it can but it doesn't need to contain values in the main diagonal. A <em>sparse matrix</em> contains only either the upper or the lower triagonal matrix, but has the main diagonal removed. That is, either the first - for upper - or the last column - for lower triangulars - are missing. To be able to restore all variable names, an additional column with variable names is required. When comparing individual differences, each individual is described by one matrix of these matrix types. The matrices are concatenated over rows. That is, if V is the number of variables assigned to \u201CVariables for MDS\u201D, the first V rows are the data for the first individual, the second V rows for the second individual, and so on.</p> <p><strong>Type of MDS and ties</strong>: The MDS can either be metric or non-metric (ordinal). For \u201Cordinal\u201D, there are different choices how to deal with tied ranks: \u201Cprimary\u201D - breaks ties, i.e., distances with the same value may be assigned different ranks (with lower ranks assigned to the values that appear first in the data); \u201Csecondary\u201D - keep ties tied, i.e., distances with the same value are assigned the same rank; or \u201Ctertiary\u201D - requires that the means of the tie blocks are in the correct order.</p> <p><strong>Transforming similarities to distances</strong>: If the data are not already distances (choose the option \u201CAlready Distances (no transform.)\u201D in such case), they need to be tranformed. An overview of the mathematical operations behind the different transformations can be found in Table 2 of the vignette to the smacof R-package; https://cran.r-project.org/web/packages/smacof/vignettes/smacof.pdf).</p> <p><strong>Example datasets</strong>: jMDS comes with several example datasets that can be used to understand the different possible shapes of data matrices, and to try out the different modes of calculating a MDS. These datasets can be accessed using the file menu (\u2630) - Open - Data Library, and then chosing the folder \u201CMultidimensional Scaling (MDS) for jamovi\u201D. Each dataset has tags, describing with which mode it should be used (\u201CSymmetric\u201D, \u201CRectangular\u201D, or \u201CIndividual Diff.\u201D), and whether the data are already \u201CDistances\u201D or need to be transformed (\u201CCorrelations\u201D, \u201CSimilarities\u201D).</p>"))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="ov_Cfg",
@@ -721,22 +730,22 @@ mdsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "mdeMDS",
                     "varSym",
-                    "varRaw",
+                    "varRct",
                     "varInd",
                     "nmeSym",
-                    "nmeRaw",
+                    "nmeRct",
                     "nmeInd",
                     "id_Ind",
                     "xfmSym",
-                    "xfmRaw",
+                    "xfmRct",
                     "xfmInd",
                     "lvlSym",
-                    "lvlRaw",
+                    "lvlRct",
                     "lvlInd",
                     "dimSym",
-                    "dimRaw",
+                    "dimRct",
                     "dimInd",
-                    "dirRaw")))}))
+                    "dirRct")))}))
 
 mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "mdsBase",
@@ -792,20 +801,20 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   submitted to the MDS calculation
 #' @param xfiSym an integer (default: 0) from which the original values are
 #'   subtracted
-#' @param varRaw a vector of strings naming the variables of interest in
+#' @param varRct a vector of strings naming the variables of interest in
 #'   \code{data}
-#' @param nmeRaw a string with a variable containg the names for the data in
+#' @param nmeRct a string with a variable containg the names for the data in
 #'   the rows (e.g., a participant ID)
-#' @param bplRaw a vector of strings naming the variables in \code{data} to be
+#' @param bplRct a vector of strings naming the variables in \code{data} to be
 #'   used when creating a biplot (cfgBPl == TRUE)
-#' @param lvlRaw \code{'ordinal_primary'}, \code{'ordinal_secondary'}
+#' @param lvlRct \code{'ordinal_primary'}, \code{'ordinal_secondary'}
 #'   (default), \code{'ordinal_tertiary'} or \code{'metric'}, the measurement
 #'   level of the variables of interest (and how ranks are assigned when the
 #'   level is ordinal)
-#' @param dimRaw an integer (default: 2), number of MDS dimensions
-#' @param dirRaw \code{'col'} (default) or \code{'row'}, are the distances
+#' @param dimRct an integer (default: 2), number of MDS dimensions
+#' @param dirRct \code{'col'} (default) or \code{'row'}, are the distances
 #'   analyzed between columns or rows
-#' @param xfmRaw TBA
+#' @param xfmRct TBA
 #' @param varInd a vector of strings naming the variables of interest in
 #'   \code{data}
 #' @param nmeInd a string with a variable name pointing to a column containing
@@ -835,6 +844,7 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param cfgBPl .
 #' @param cfgInX .
 #' @param cfgInY .
+#' @param cfgB4R .
 #' @param figShp .
 #' @param figStr .
 #' @param figRes .
@@ -844,7 +854,7 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$genSym} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$genRaw} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$genRct} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$genInd} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$mdlInf} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$tblCfg} \tab \tab \tab \tab \tab a table containing the fitted configurations \cr
@@ -855,7 +865,7 @@ mdsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$figHst} \tab \tab \tab \tab \tab TBA \cr
 #'   \code{results$figWgh} \tab \tab \tab \tab \tab TBA \cr
 #'   \code{results$addSym} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$addRaw} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$addRct} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$addInd} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$ov_Cfg} \tab \tab \tab \tab \tab an output \cr
 #' }
@@ -877,13 +887,13 @@ mds <- function(
     dimSym = 2,
     xfmSym = "none",
     xfiSym = 0,
-    varRaw,
-    nmeRaw,
-    bplRaw,
-    lvlRaw = "ordinal_secondary",
-    dimRaw = 2,
-    dirRaw = "col",
-    xfmRaw = "none",
+    varRct,
+    nmeRct,
+    bplRct,
+    lvlRct = "ordinal_secondary",
+    dimRct = 2,
+    dirRct = "col",
+    xfmRct = "none",
     varInd,
     nmeInd,
     id_Ind,
@@ -898,6 +908,7 @@ mds <- function(
     cfgBPl = FALSE,
     cfgInX = FALSE,
     cfgInY = FALSE,
+    cfgB4R = TRUE,
     figShp = FALSE,
     figStr = FALSE,
     figRes = FALSE,
@@ -911,9 +922,9 @@ mds <- function(
     if ( ! missing(varSym)) varSym <- jmvcore::resolveQuo(jmvcore::enquo(varSym))
     if ( ! missing(nmeSym)) nmeSym <- jmvcore::resolveQuo(jmvcore::enquo(nmeSym))
     if ( ! missing(bplSym)) bplSym <- jmvcore::resolveQuo(jmvcore::enquo(bplSym))
-    if ( ! missing(varRaw)) varRaw <- jmvcore::resolveQuo(jmvcore::enquo(varRaw))
-    if ( ! missing(nmeRaw)) nmeRaw <- jmvcore::resolveQuo(jmvcore::enquo(nmeRaw))
-    if ( ! missing(bplRaw)) bplRaw <- jmvcore::resolveQuo(jmvcore::enquo(bplRaw))
+    if ( ! missing(varRct)) varRct <- jmvcore::resolveQuo(jmvcore::enquo(varRct))
+    if ( ! missing(nmeRct)) nmeRct <- jmvcore::resolveQuo(jmvcore::enquo(nmeRct))
+    if ( ! missing(bplRct)) bplRct <- jmvcore::resolveQuo(jmvcore::enquo(bplRct))
     if ( ! missing(varInd)) varInd <- jmvcore::resolveQuo(jmvcore::enquo(varInd))
     if ( ! missing(nmeInd)) nmeInd <- jmvcore::resolveQuo(jmvcore::enquo(nmeInd))
     if ( ! missing(id_Ind)) id_Ind <- jmvcore::resolveQuo(jmvcore::enquo(id_Ind))
@@ -924,16 +935,16 @@ mds <- function(
             `if`( ! missing(varSym), varSym, NULL),
             `if`( ! missing(nmeSym), nmeSym, NULL),
             `if`( ! missing(bplSym), bplSym, NULL),
-            `if`( ! missing(varRaw), varRaw, NULL),
-            `if`( ! missing(nmeRaw), nmeRaw, NULL),
-            `if`( ! missing(bplRaw), bplRaw, NULL),
+            `if`( ! missing(varRct), varRct, NULL),
+            `if`( ! missing(nmeRct), nmeRct, NULL),
+            `if`( ! missing(bplRct), bplRct, NULL),
             `if`( ! missing(varInd), varInd, NULL),
             `if`( ! missing(nmeInd), nmeInd, NULL),
             `if`( ! missing(id_Ind), id_Ind, NULL),
             `if`( ! missing(bplInd), bplInd, NULL))
 
     for (v in nmeSym) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
-    for (v in nmeRaw) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
+    for (v in nmeRct) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
 
     options <- mdsOptions$new(
         mdeMDS = mdeMDS,
@@ -944,13 +955,13 @@ mds <- function(
         dimSym = dimSym,
         xfmSym = xfmSym,
         xfiSym = xfiSym,
-        varRaw = varRaw,
-        nmeRaw = nmeRaw,
-        bplRaw = bplRaw,
-        lvlRaw = lvlRaw,
-        dimRaw = dimRaw,
-        dirRaw = dirRaw,
-        xfmRaw = xfmRaw,
+        varRct = varRct,
+        nmeRct = nmeRct,
+        bplRct = bplRct,
+        lvlRct = lvlRct,
+        dimRct = dimRct,
+        dirRct = dirRct,
+        xfmRct = xfmRct,
         varInd = varInd,
         nmeInd = nmeInd,
         id_Ind = id_Ind,
@@ -965,6 +976,7 @@ mds <- function(
         cfgBPl = cfgBPl,
         cfgInX = cfgInX,
         cfgInY = cfgInY,
+        cfgB4R = cfgB4R,
         figShp = figShp,
         figStr = figStr,
         figRes = figRes,
