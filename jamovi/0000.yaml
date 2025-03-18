@@ -1,7 +1,7 @@
 ---
 title: Multidimensional Scaling (MDS) for jamovi
 name: jMDS
-version: 0.1.0
+version: 0.2.0
 jms: '1.0'
 authors:
   - Sebastian Jentschke

@@ -1,7 +1,7 @@
 Package: jMDS
 Type: Package
 Title: Multidimensional Scaling (MDS) for jamovi
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person(given = "Sebastian", family = "Jentschke",  role = c("aut", "cre", "cph"), email = "sebastian.jentschke@uib.no", comment = c(ORCID = "0000-0003-2576-5432")),
              person(given = "Hans-Rüdiger", family = "Pfister", role = "ctb",                                                        comment = c(ORCID = "0000-0002-3802-4222")))
 Maintainer: Sebastian Jentschke <sebastian.jentschke@uib.no>
