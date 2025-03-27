@@ -291,14 +291,14 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             crrMDS <- image$state
             if (is.null(crrMDS)) return(FALSE)
             
-            crrDta <- data.frame(x = seq_along(crrSPP), y = sort(crrSPP, decreasing = TRUE))
+            crrDta <- data.frame(x = seq_along(crrMDS$spp), y = sort(crrMDS$spp, decreasing = TRUE))
             crrFig <- ggplot2::ggplot(crrDta, ggplot2::aes(x = x, y = y, label = rownames(crrDta))) +
                       ggplot2::geom_segment(ggplot2::aes(x = x, xend = x, y = 0, yend = y), color = theme$color[1], linetype = "dotted") +
                       ggplot2::geom_point(size = 1, color = theme$color[2]) +
                       ggplot2::geom_text(size = 4, hjust = 0, vjust = -0.5, angle = 45) +
                       ggplot2::labs(x = .("Objects"), y = .("Stress Proportion (%)")) +
-                      ggplot2::scale_x_continuous(breaks = seq_along(crrSPP), limits = c(1, max(crrDta$x) + 1), labels = NULL) +
-                      ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, max(crrSPP) * 1.1))
+                      ggplot2::scale_x_continuous(breaks = seq_along(crrMDS$spp), limits = c(1, max(crrDta$x) + 1), labels = NULL) +
+                      ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, max(crrMDS$spp) * 1.2))
 
             print(crrFig + ggtheme)
             TRUE
@@ -312,12 +312,15 @@ mdsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 return(TRUE)
             }
 
-            crrDta <- as.data.frame(t(vapply(crrMDS$cweights, diag, numeric(2))), row.names = names(crrMDS$delta))
+            crrDim <- self$options[[paste0("dim", self$options$mdeMDS)]]
+            nteDim <- if (crrDim > 2) jmvcore::format(.("(showing only the first 2 of {d} dimensions)"), d = crrDim) else NULL
+
+            crrDta <- as.data.frame(t(vapply(crrMDS$cweights, diag, numeric(crrDim))), row.names = names(crrMDS$delta))
             crrFig <- ggplot2::ggplot(crrDta) +
                       ggplot2::geom_segment(ggplot2::aes(x = 0, xend = D1, y = 0, yend = D2), arrow = ggplot2::arrow()) +
                       ggplot2::geom_text(ggplot2::aes(x = D1, y = D2, label = rownames(crrDta)), hjust = 0, nudge_x = 0.05) +
                       ggplot2::coord_fixed() +
-                      ggplot2::labs(x = .("Dimension 1"), y = .("Dimension 2")) +
+                      ggplot2::labs(x = .("Dimension 1"), y = .("Dimension 2"), caption = nteDim) +
                       ggplot2::scale_x_continuous(expand = c(0, 0), limits = c(0, rndMnM(max(crrDta)))) +
                       ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, rndMnM(max(crrDta))))
 
