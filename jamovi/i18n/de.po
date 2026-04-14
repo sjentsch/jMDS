@@ -410,7 +410,7 @@ msgid "Distances the 10 Brightest Stars in Different Zodiac Signs"
 msgstr ""
 
 #: R/mds.b.R
-msgid "Estimated <strong>{m}</strong> (of type \\"{t}\\") with {o} objects in {i} iterations."
+msgid "Estimated <strong>{m}</strong> (of type \"{t}\") with {o} objects in {i} iterations."
 msgstr ""
 
 #: mds/options/xfmRaw/minkowski_2.title
